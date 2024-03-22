@@ -1,0 +1,16 @@
+IF(EXISTS (SELECT * FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND	TABLE_NAME = 'Tracker'))
+BEGIN
+	DROP TABLE Tracker
+END
+GO
+
+CREATE TABLE Tracker
+(
+		Id           INT PRIMARY KEY IDENTITY(1,1),
+		Completed    DECIMAL(6,3) NULL,
+		Planned	     DECIMAL(6,3) NULL,
+		[Percentage] DECIMAL(6,3) NULL,
+		[Date]       DATETIME
+)
+
+
