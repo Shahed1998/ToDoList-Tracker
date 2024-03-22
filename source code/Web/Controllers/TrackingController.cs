@@ -13,13 +13,14 @@ namespace Web.Controllers
             _trackerService = trackerService;
         }
 
-        public async Task<IActionResult> Index(bool IsSaved = false)
+        public async Task<IActionResult> Index(bool? IsSaved)
 
         {
             var trackingList = await _trackerService.GetAllTrackers();
 
             ViewBag.IsSaved = IsSaved;
-            ViewBag.TrackingList = trackingList;
+            ViewBag.TrackingList = trackingList.Item1;
+            ViewBag.Achievements = trackingList.Item2;
 
             return View();
         }
@@ -31,7 +32,8 @@ namespace Web.Controllers
             bool ts = await _trackerService.AddTracker(model);
             var trackingList = await _trackerService.GetAllTrackers();
 
-            ViewBag.TrackingList = trackingList;
+            ViewBag.TrackingList = trackingList.Item1;
+            ViewBag.Achievements = trackingList.Item2;
             ViewBag.IsSaved = ts;
 
             if (ts)

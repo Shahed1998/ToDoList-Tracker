@@ -1,15 +1,16 @@
 ﻿@model Web.Models.Business_Entities.TrackerViewModel
 
 @{
-    bool isSaved = ViewBag.IsSaved ?? false;
+    bool? isSaved = ViewBag.IsSaved;
     var TrackingList = ViewBag.TrackingList;
     int count = 0;
+    decimal achievements = ViewBag.Achievements;
 
-    if (isSaved)
+    if (isSaved == true)
     {
         <div id="successMessage" class="alert alert-success" role="alert">Successful</div>
     }
-    else
+    else if(isSaved == false)
     {
         <div id="failedMessage" class="alert alert-danger" role="alert">
             Failed
@@ -17,48 +18,55 @@
     }
 }
 
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">To Do List completed</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-<div class="panel panel-default">
-    <div class="panel-header">
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary modal-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Create
-        </button>
+            <form id="registerForm" method="post">
 
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">To Do List completed</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label asp-for="Completed"></label>
+                        <input asp-for="Completed" class="form-control" />
+                        <span asp-validation-for="Completed" class="text-danger"></span>
                     </div>
 
-                    <form id="registerForm" method="post">
-
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label asp-for="Completed"></label>
-                                <input asp-for="Completed" class="form-control" />
-                                <span asp-validation-for="Completed" class="text-danger"></span>
-                            </div>
-
-                            <div class="form-group">
-                                <label asp-for="Planned"></label>
-                                <input asp-for="Planned" class="form-control" />
-                                <span asp-validation-for="Planned" class="text-danger .planned-validation-error"></span>
-                            </div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary submit-form">Submit</button>
-                        </div>
-                    </form>
+                    <div class="form-group">
+                        <label asp-for="Planned"></label>
+                        <input asp-for="Planned" class="form-control" />
+                        <span asp-validation-for="Planned" class="text-danger .planned-validation-error"></span>
+                    </div>
                 </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary submit-form">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-header container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary modal-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Create
+                </button>
+            </div>
+            <div class="col-md-3"></div>
+            <div class="col-md-3"></div>
+            <div class="col-md-3 d-flex align-items-center justify-content-center">
+                <span><i class="fa-solid fa-trophy"></i> Achieved : @achievements %</span>
             </div>
         </div>
-
     </div>
     <div class="panel-body">
         @if (TrackingList != null)

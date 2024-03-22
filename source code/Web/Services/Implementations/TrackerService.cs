@@ -19,10 +19,10 @@ namespace Web.Services.Implementations
             return await _unitOfWork.TrackerRepository.Add((Tracker)viewModel);
         }
 
-        public async Task<IEnumerable<TrackerViewModel>> GetAllTrackers()
+        public async Task<(IEnumerable<TrackerViewModel>, decimal?)> GetAllTrackers()
         {
             var result = await _unitOfWork.TrackerRepository.GetAll();
-            return result.Select(tracker => (TrackerViewModel)tracker);
+            return (result.Item1.Select(tracker => (TrackerViewModel)tracker), result.Item2);
         }
 
         public async Task<bool> Delete(int Id)

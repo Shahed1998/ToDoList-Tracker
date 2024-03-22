@@ -19,9 +19,30 @@ namespace Web.Repositories.Implementations
             return await _dataContext.Database.ExecuteSqlAsync($"usp_InsertIntoTrackerTable @completed = {model.Completed}, @planned = {model.Planned}") > 0;
         }
 
-        public async Task<IEnumerable<Tracker>> GetAll()
+        public async Task<(IEnumerable<Tracker>, decimal?)> GetAll()
         {
-            return await _dataContext.Trackers.OrderByDescending(x => x.Id).AsNoTracking().ToListAsync();
+            try
+            {
+                string? sql = @"
+                                SELECT ISNULL(
+                                    NULLIF(
+                                        (SELECT 
+                                            CASE 
+                                                WHEN SUM(t.Planned) = 0 THEN 0 
+                                                ELSE CAST(SUM(t.Completed) / SUM(t.Planned) * 100 AS DECIMAL(6,2)) 
+                                            END 
+                                        FROM Tracker t), 0), 0) as Result";
+
+                decimal? test = _dataContext.AchievementResults.FromSqlRaw(sql).AsNoTracking().AsEnumerable().FirstOrDefault()?.Result;
+
+                IEnumerable<Tracker> res = await _dataContext.Trackers.OrderByDescending(x => x.Id).AsNoTracking().ToListAsync();
+                return (res, test);
+            }
+            catch (Exception ex) 
+            {
+                throw new Exception(ex.Message);
+            }
+            
         }
 
         public async Task Delete(int Id)
