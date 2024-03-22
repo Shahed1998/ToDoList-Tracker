@@ -1,0 +1,132 @@
+﻿@model Web.Models.Business_Entities.TrackerViewModel
+
+@{
+    bool isSaved = ViewBag.IsSaved ?? false;
+    var TrackingList = ViewBag.TrackingList;
+    int count = 0;
+
+    if (isSaved)
+    {
+        <div id="successMessage" class="alert alert-success" role="alert">Successful</div>
+    }
+    else
+    {
+        <div id="failedMessage" class="alert alert-danger" role="alert">
+            Failed
+        </div>
+    }
+}
+
+
+<div class="panel panel-default">
+    <div class="panel-header">
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary modal-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Create
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">To Do List completed</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <form id="registerForm" method="post">
+
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label asp-for="Completed"></label>
+                                <input asp-for="Completed" class="form-control" />
+                                <span asp-validation-for="Completed" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Planned"></label>
+                                <input asp-for="Planned" class="form-control" />
+                                <span asp-validation-for="Planned" class="text-danger .planned-validation-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary submit-form">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="panel-body">
+        @if (TrackingList != null)
+        {
+            <table class="table">
+                <thead>
+                    <tr class="table-dark">
+                        <th scope="col">Id</th>
+                        <th scope="col">Completed (hours)</th>
+                        <th scope="col">Planned (hours)</th>
+                        <th scope="col">Percentage (%)</th>
+                        <th scope="col">Date (DD-MM-YYYY)</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (var t in TrackingList)
+                        {
+                            count += 1;
+                            <tr class="align-middle">
+                                <th scope="row">@count</th>
+                                <td>@t.Completed</td>
+                                <td>@t.Planned</td>
+                                <td>@t.Percentage</td>
+                                <td>@t.Date?.ToString("dd-MM-yyyy")</td>
+                                <td>
+                                    @* <a asp-controller="Tracking" asp-action="Edit" asp-route-id="@t.Id" class="btn btn-secondary"><i class="fa-solid fa-pen-to-square"></i></a> *@
+                                    <a asp-controller="Tracking" asp-action="Delete" asp-route-id="@t.Id" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div>No data available</div>
+        }
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    <script>
+        // Function to remove the success message after 10 seconds
+        setTimeout(function () {
+            var successMessage = document.getElementById('successMessage');
+            var failedMessage = document.getElementById('failedMessage');
+            if (successMessage) {
+                successMessage.remove();
+            }
+            else if (failedMessage) {
+                failedMessage.remove();
+
+            }
+        }, 10000); // 10 seconds in milliseconds
+
+        $(".submit-form").click(function (e) {
+            if ($("#Planned").val().length < 1 || $("#Completed").val().length < 1) {
+                alert("Both field are required");
+                e.preventDefault();
+            }
+        })
+
+    </script>
+}
+
