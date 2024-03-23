@@ -21,7 +21,7 @@ namespace Web.Services.Implementations
 
         public async Task<(IEnumerable<TrackerViewModel>, decimal?)> GetAllTrackers()
         {
-            var result = await _unitOfWork.TrackerRepository.GetAll();
+            var result = await _unitOfWork.TrackerRepository.GetAll(1, 5);
             return (result.Item1.Select(tracker => (TrackerViewModel)tracker), result.Item2);
         }
 

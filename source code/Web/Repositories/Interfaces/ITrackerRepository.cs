@@ -1,11 +1,12 @@
-﻿using Web.Models.General_Entities;
+﻿using Web.Models.Business_Entities;
+using Web.Models.General_Entities;
 
 namespace Web.Repositories.Interfaces
 {
     public interface ITrackerRepository
     {
         Task<bool> Add(Tracker model);
-        Task<(IEnumerable<Tracker>, decimal?)> GetAll();
+        Task<(Pager<Tracker>, decimal?)> GetAll(int pageNumber = 1, int pageSize = 10);
         Task Delete(int Id);
     }
 }

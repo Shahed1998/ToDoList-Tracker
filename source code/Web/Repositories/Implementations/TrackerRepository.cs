@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using web.Data;
+using Web.Models.Business_Entities;
 using Web.Models.General_Entities;
 using Web.Repositories.Interfaces;
 
@@ -19,7 +20,7 @@ namespace Web.Repositories.Implementations
             return await _dataContext.Database.ExecuteSqlAsync($"usp_InsertIntoTrackerTable @completed = {model.Completed}, @planned = {model.Planned}") > 0;
         }
 
-        public async Task<(IEnumerable<Tracker>, decimal?)> GetAll()
+        public async Task<(Pager<Tracker>, decimal?)> GetAll(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
@@ -33,16 +34,17 @@ namespace Web.Repositories.Implementations
                                             END 
                                         FROM Tracker t), 0), 0) as Result";
 
-                decimal? test = _dataContext.AchievementResults.FromSqlRaw(sql).AsNoTracking().AsEnumerable().FirstOrDefault()?.Result;
+                decimal? achievement = _dataContext.AchievementResults.FromSqlRaw(sql).AsNoTracking().AsEnumerable().FirstOrDefault()?.Result;
 
-                IEnumerable<Tracker> res = await _dataContext.Trackers.OrderByDescending(x => x.Id).AsNoTracking().ToListAsync();
-                return (res, test);
+                var pagedList = await Pager<Tracker>.CreateAsync(_dataContext.Trackers, pageNumber, pageSize);
+
+                return (pagedList, achievement);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            
+
         }
 
         public async Task Delete(int Id)
