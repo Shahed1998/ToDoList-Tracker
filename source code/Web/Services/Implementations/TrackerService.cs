@@ -19,10 +19,15 @@ namespace Web.Services.Implementations
             return await _unitOfWork.TrackerRepository.Add((Tracker)viewModel);
         }
 
-        public async Task<(IEnumerable<TrackerViewModel>, decimal?)> GetAllTrackers()
+        public async Task<(Pager<TrackerViewModel>, decimal?)> GetAllTrackers(int pageNumber = 1, int pageSize = 10)
         {
-            var result = await _unitOfWork.TrackerRepository.GetAll(1, 5);
-            return (result.Item1.Select(tracker => (TrackerViewModel)tracker), result.Item2);
+            var result = await _unitOfWork.TrackerRepository.GetAll(pageNumber, pageSize);
+
+            var lst = result.Item1.Select(tracker => (TrackerViewModel)tracker).ToList();
+
+            var test = new Pager<TrackerViewModel>(lst, result.Item1.TotalCount, pageNumber, pageSize);
+
+            return (test, result.Item2);
         }
 
         public async Task<bool> Delete(int Id)

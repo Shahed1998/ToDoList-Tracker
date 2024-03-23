@@ -6,11 +6,15 @@ namespace Web.Models.Business_Entities
     {
         public int PageIndex  { get; private set; }
         public int TotalPages { get; set; }
+        public int TotalCount { get; set; }
+
+        public Pager() { }  
 
         public Pager(List<T> items, int count, int pageIndex, int pageSize)
         { 
             PageIndex = pageIndex;
             TotalPages = (int) Math.Ceiling(count / (double) pageSize);
+            TotalCount = count;
             this.AddRange(items);
         }
 

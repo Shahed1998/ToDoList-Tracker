@@ -13,36 +13,45 @@ namespace Web.Controllers
             _trackerService = trackerService;
         }
 
-        public async Task<IActionResult> Index(bool? IsSaved)
+        public async Task<IActionResult> Index([FromBody] bool? IsSaved, int pageNumber=1, int pageSize=5)
 
-        {
-            var trackingList = await _trackerService.GetAllTrackers();
+       {
+            if (pageNumber < 1) 
+            {
+                pageNumber = 1;
+            }
 
-            ViewBag.IsSaved = IsSaved;
-            ViewBag.TrackingList = trackingList.Item1;
+            var trackingList = await _trackerService.GetAllTrackers(pageNumber, pageSize);
+
+            CompositeTrackerViewModel model = new CompositeTrackerViewModel();
+
+            model.Pager = trackingList.Item1;
+
+            ViewBag.IsSaved = TempData["isSaved"];
+
             ViewBag.Achievements = trackingList.Item2;
 
-            return View();
+            return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(TrackerViewModel model)
+        public async Task<IActionResult> Index(CompositeTrackerViewModel model)
         {
+            bool ts = await _trackerService.AddTracker(model.TrackerViewModel!);
 
-            bool ts = await _trackerService.AddTracker(model);
-            var trackingList = await _trackerService.GetAllTrackers();
+            TempData["isSaved"] = ts;
 
-            ViewBag.TrackingList = trackingList.Item1;
-            ViewBag.Achievements = trackingList.Item2;
-            ViewBag.IsSaved = ts;
+            return RedirectToAction("Index");
+        }
 
-            if (ts)
-            {
-                ModelState.Clear();
-                model = new TrackerViewModel();
-            }
+        [Route("Tracking/Delete/{Id}")]
+        public async Task<IActionResult> Delete(int Id)
+        {
+            bool isSaved = await _trackerService.Delete(Id);
 
-            return View(model);
+            TempData["isSaved"] = isSaved;
+
+            return RedirectToAction("Index");
         }
 
         [Route("Tracking/Edit/{Id}")]
@@ -51,11 +60,6 @@ namespace Web.Controllers
             throw new NotImplementedException();
         }
 
-        [Route("Tracking/Delete/{Id}")]
-        public async Task<IActionResult> Delete(int Id)
-        {
-            bool isSaved = await _trackerService.Delete(Id);
-            return RedirectToAction("Index", new { IsSaved = isSaved });
-        }
+
     }
 }

@@ -1,8 +1,8 @@
-﻿@model Web.Models.Business_Entities.TrackerViewModel
+﻿@model Web.Models.Business_Entities.CompositeTrackerViewModel
 
 @{
     bool? isSaved = ViewBag.IsSaved;
-    var TrackingList = ViewBag.TrackingList;
+    var TrackingList = Model.Pager;
     int count = 0;
     decimal achievements = ViewBag.Achievements;
 
@@ -31,15 +31,15 @@
 
                 <div class="modal-body">
                     <div class="form-group">
-                        <label asp-for="Completed"></label>
-                        <input asp-for="Completed" class="form-control" />
-                        <span asp-validation-for="Completed" class="text-danger"></span>
+                        <label asp-for="TrackerViewModel.Completed"></label>
+                        <input asp-for="TrackerViewModel.Completed" class="form-control" />
+                        <span asp-validation-for="TrackerViewModel.Completed" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
-                        <label asp-for="Planned"></label>
-                        <input asp-for="Planned" class="form-control" />
-                        <span asp-validation-for="Planned" class="text-danger .planned-validation-error"></span>
+                        <label asp-for="TrackerViewModel.Planned"></label>
+                        <input asp-for="TrackerViewModel.Planned" class="form-control" />
+                        <span asp-validation-for="TrackerViewModel.Planned" class="text-danger .planned-validation-error"></span>
                     </div>
                 </div>
 
@@ -69,7 +69,7 @@
         </div>
     </div>
     <div class="panel-body">
-        @if (TrackingList != null)
+        @if (TrackingList?.Count() > 0)
         {
             <table class="table">
                 <thead>
@@ -107,6 +107,16 @@
         {
             <div>No data available</div>
         }
+
+    </div>
+    <div class="panel-footer">
+        @{
+            var prevDisabled = !Model.Pager.PreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.Pager.NextPage ? "disabled" : "";
+
+            <a asp-action="Index" asp-route-pageNumber="@(Model.Pager.PageIndex - 1)" class="btn btn-outline-secondary @prevDisabled">Previous</a>
+            <a asp-action="Index" asp-route-pageNumber="@(Model.Pager.PageIndex + 1)" class="btn btn-outline-secondary @nextDisabled">Next</a>
+        }
     </div>
 </div>
 
@@ -129,7 +139,7 @@
         }, 10000); // 10 seconds in milliseconds
 
         $(".submit-form").click(function (e) {
-            if ($("#Planned").val().length < 1 || $("#Completed").val().length < 1) {
+            if ($("#TrackerViewModel_Completed").val().length < 1 || $("#TrackerViewModel_Planned").val().length < 1) {
                 alert("Both field are required");
                 e.preventDefault();
             }
