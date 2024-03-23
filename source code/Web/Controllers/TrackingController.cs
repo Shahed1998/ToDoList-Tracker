@@ -13,23 +13,34 @@ namespace Web.Controllers
             _trackerService = trackerService;
         }
 
-        public async Task<IActionResult> Index([FromBody] bool? IsSaved, int pageNumber=1, int pageSize=5)
+        public async Task<IActionResult> Index([FromBody] bool? IsSaved, int pageNumber=1, int pageSize=5, int count = 0, bool prevPage = false) 
+        
+        {
 
-       {
-            if (pageNumber < 1) 
+            if (prevPage)
             {
-                pageNumber = 1;
+                count = count - pageSize - 1;
             }
 
+            if (pageNumber <= 1) 
+            {
+                pageNumber = 1;
+                count = 0;
+            }
+
+           
             var trackingList = await _trackerService.GetAllTrackers(pageNumber, pageSize);
 
             CompositeTrackerViewModel model = new CompositeTrackerViewModel();
 
             model.Pager = trackingList.Item1;
 
-            ViewBag.IsSaved = TempData["isSaved"];
+            var end = model.Pager.Count();
 
+            ViewBag.IsSaved = TempData["isSaved"];
             ViewBag.Achievements = trackingList.Item2;
+            ViewBag.Count = count;
+            ViewBag.PageNumber = pageNumber;
 
             return View(model);
         }

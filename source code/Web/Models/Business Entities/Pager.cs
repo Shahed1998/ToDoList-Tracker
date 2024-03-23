@@ -7,6 +7,7 @@ namespace Web.Models.Business_Entities
         public int PageIndex  { get; private set; }
         public int TotalPages { get; set; }
         public int TotalCount { get; set; }
+        public int PageSize { get; set; }
 
         public Pager() { }  
 
@@ -15,6 +16,7 @@ namespace Web.Models.Business_Entities
             PageIndex = pageIndex;
             TotalPages = (int) Math.Ceiling(count / (double) pageSize);
             TotalCount = count;
+            PageSize = pageSize;
             this.AddRange(items);
         }
 

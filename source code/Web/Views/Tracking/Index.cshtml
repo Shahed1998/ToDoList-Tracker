@@ -3,7 +3,7 @@
 @{
     bool? isSaved = ViewBag.IsSaved;
     var TrackingList = Model.Pager;
-    int count = 0;
+    int count = ViewBag.Count;
     decimal achievements = ViewBag.Achievements;
 
     if (isSaved == true)
@@ -105,18 +105,60 @@
         }
         else
         {
-            <div>No data available</div>
+            <div>No data available</div><hr/>
         }
 
     </div>
     <div class="panel-footer">
+
         @{
+
             var prevDisabled = !Model.Pager.PreviousPage ? "disabled" : "";
             var nextDisabled = !Model.Pager.NextPage ? "disabled" : "";
+            var endPage = Model.Pager.TotalPages;
+            var tab = Model.Pager.Count();
+           
+            var pagerModel = Model.Pager;
 
-            <a asp-action="Index" asp-route-pageNumber="@(Model.Pager.PageIndex - 1)" class="btn btn-outline-secondary @prevDisabled">Previous</a>
-            <a asp-action="Index" asp-route-pageNumber="@(Model.Pager.PageIndex + 1)" class="btn btn-outline-secondary @nextDisabled">Next</a>
+            // var pIndex = (pagerModel.PageIndex - 1);
+
+            var endPageItemCount = (pagerModel.TotalPages - 1) * pagerModel.PageSize;
+            var prevPageTotalCount = pagerModel.PageIndex * pagerModel.PageSize - 4;
+
+            <a asp-action="Index"
+               asp-route-pageNumber="@(Model.Pager.PageIndex - 1)"
+               asp-route-count="@prevPageTotalCount"
+               asp-route-prevPage="true"
+            class="btn btn-outline-secondary @prevDisabled">Previous</a>
+
+            if (ViewBag.PageNumber != 1)
+            {
+                <a asp-action="Index"
+                   asp-route-pageNumber="1"
+                   asp-route-prevPage="true"
+                class="btn btn-outline-secondary @prevDisabled">Start</a>
+            }
+
+            if (endPage > 1)
+            {
+                if(! string.Equals(nextDisabled, "disabled", StringComparison.OrdinalIgnoreCase))
+                {
+                    <a asp-action="Index"
+                       asp-route-pageNumber="@endPage"
+                       asp-route-count="@endPageItemCount"
+                       asp-route-prevPage="false"
+                       class="btn btn-outline-secondary @nextDisabled">End</a>
+                }
+            }
+
+            <a asp-action="Index"
+               asp-route-pageNumber="@(Model.Pager.PageIndex + 1)"
+               asp-route-count="@count"
+               asp-route-prevPage="false"
+               class="btn btn-outline-secondary @nextDisabled">Next</a>
         }
+
+        
     </div>
 </div>
 
