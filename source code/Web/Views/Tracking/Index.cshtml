@@ -123,7 +123,7 @@
             // var pIndex = (pagerModel.PageIndex - 1);
 
             var endPageItemCount = (pagerModel.TotalPages - 1) * pagerModel.PageSize;
-            var prevPageTotalCount = pagerModel.PageIndex * pagerModel.PageSize - 4;
+            var prevPageTotalCount = pagerModel.PageIndex * pagerModel.PageSize - pagerModel.PageSize + 1;
 
             <a asp-action="Index"
                asp-route-pageNumber="@(Model.Pager.PageIndex - 1)"
