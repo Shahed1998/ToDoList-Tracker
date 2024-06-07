@@ -46,9 +46,9 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(CompositeTrackerViewModel model)
+        public async Task<IActionResult> Index(TrackerViewModel model)
         {
-            bool ts = await _trackerService.AddTracker(model.TrackerViewModel!);
+            bool ts = await _trackerService.AddTracker(model);
 
             TempData["isSaved"] = ts;
 
@@ -71,6 +71,12 @@ namespace Web.Controllers
             throw new NotImplementedException();
         }
 
+        
+        public IActionResult LoadPartialView(int viewNumber)
+        {
+            if (viewNumber == 2) return PartialView("_Report", new TrackerViewModel());
+            return PartialView("_Create", new TrackerViewModel());
+        }
 
     }
 }

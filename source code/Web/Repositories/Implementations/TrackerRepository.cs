@@ -36,7 +36,7 @@ namespace Web.Repositories.Implementations
 
                 decimal? achievement = _dataContext.AchievementResults.FromSqlRaw(sql).AsNoTracking().AsEnumerable().FirstOrDefault()?.Result;
 
-                var pagedList = await Pager<Tracker>.CreateAsync(_dataContext.Trackers.OrderByDescending(x => x.Id), pageNumber, pageSize);
+                var pagedList = await Pager<Tracker>.CreateAsync(_dataContext.Trackers.OrderByDescending(x => x.Date), pageNumber, pageSize);
 
                 return (pagedList, achievement);
             }

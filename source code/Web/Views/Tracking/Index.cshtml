@@ -8,57 +8,42 @@
 
     if (isSaved == true)
     {
-        <div id="successMessage" class="alert alert-success" role="alert">Successful</div>
+            <div id="successMessage" class="alert alert-success" role="alert">Successful</div>
     }
     else if(isSaved == false)
     {
-        <div id="failedMessage" class="alert alert-danger" role="alert">
-            Failed
-        </div>
+            <div id="failedMessage" class="alert alert-danger" role="alert">
+                Failed
+            </div>
     }
 }
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">To Do List completed</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">To Do List completed</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div id="loadModalData"></div>
             </div>
-
-            <form id="registerForm" method="post">
-
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label asp-for="TrackerViewModel.Completed"></label>
-                        <input asp-for="TrackerViewModel.Completed" class="form-control" />
-                        <span asp-validation-for="TrackerViewModel.Completed" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="TrackerViewModel.Planned"></label>
-                        <input asp-for="TrackerViewModel.Planned" class="form-control" />
-                        <span asp-validation-for="TrackerViewModel.Planned" class="text-danger .planned-validation-error"></span>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary submit-form">Submit</button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
+
+
 
 <div class="panel panel-default">
     <div class="panel-header container-fluid">
         <div class="row">
             <div class="col-md-3">
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary modal-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <button type="button" class="btn btn-primary modal-btn" id="createModal" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     Create
+                </button>
+                <button type="button" class="btn btn-primary modal-btn" id="reportModal" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Report
                 </button>
             </div>
             <div class="col-md-3"></div>
@@ -87,17 +72,17 @@
                         foreach (var t in TrackingList)
                         {
                             count += 1;
-                            <tr class="align-middle">
-                                <th scope="row">@count</th>
-                                <td>@t.Completed</td>
-                                <td>@t.Planned</td>
-                                <td>@t.Percentage</td>
-                                <td>@t.Date?.ToString("dd-MM-yyyy")</td>
-                                <td>
-                                    @* <a asp-controller="Tracking" asp-action="Edit" asp-route-id="@t.Id" class="btn btn-secondary"><i class="fa-solid fa-pen-to-square"></i></a> *@
-                                    <a asp-controller="Tracking" asp-action="Delete" asp-route-id="@t.Id" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
-                                </td>
-                            </tr>
+                                                        <tr class="align-middle">
+                                                            <th scope="row">@count</th>
+                                                            <td>@t.Completed</td>
+                                                            <td>@t.Planned</td>
+                                                            <td>@t.Percentage</td>
+                                                            <td>@t.Date?.ToString("dd-MM-yyyy")</td>
+                                                            <td>
+                                                                @* <a asp-controller="Tracking" asp-action="Edit" asp-route-id="@t.Id" class="btn btn-secondary"><i class="fa-solid fa-pen-to-square"></i></a> *@
+                                                                <a asp-controller="Tracking" asp-action="Delete" asp-route-id="@t.Id" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                                                            </td>
+                                                        </tr>
                         }
                     }
                 </tbody>
@@ -113,7 +98,7 @@
 
         @{
 
-            var prevDisabled = !Model.Pager.PreviousPage ? "disabled" : "";
+            var prevDisabled = !Model.Pager!.PreviousPage ? "disabled" : "";
             var nextDisabled = !Model.Pager.NextPage ? "disabled" : "";
             var endPage = Model.Pager.TotalPages;
             var tab = Model.Pager.Count();
@@ -125,37 +110,37 @@
             var endPageItemCount = (pagerModel.TotalPages - 1) * pagerModel.PageSize;
             var prevPageTotalCount = pagerModel.PageIndex * pagerModel.PageSize - pagerModel.PageSize + 1;
 
-            <a asp-action="Index"
-               asp-route-pageNumber="@(Model.Pager.PageIndex - 1)"
-               asp-route-count="@prevPageTotalCount"
-               asp-route-prevPage="true"
-            class="btn btn-outline-secondary @prevDisabled">Previous</a>
+                                        <a asp-action="Index"
+                                           asp-route-pageNumber="@(Model.Pager.PageIndex - 1)"
+                                           asp-route-count="@prevPageTotalCount"
+                                           asp-route-prevPage="true"
+                                        class="btn btn-outline-secondary @prevDisabled">Previous</a>
 
             if (ViewBag.PageNumber != 1)
             {
-                <a asp-action="Index"
-                   asp-route-pageNumber="1"
-                   asp-route-prevPage="true"
-                class="btn btn-outline-secondary @prevDisabled">Start</a>
+                                            <a asp-action="Index"
+                                               asp-route-pageNumber="1"
+                                               asp-route-prevPage="true"
+                                            class="btn btn-outline-secondary @prevDisabled">Start</a>
             }
 
             if (endPage > 1)
             {
                 if(! string.Equals(nextDisabled, "disabled", StringComparison.OrdinalIgnoreCase))
                 {
-                    <a asp-action="Index"
-                       asp-route-pageNumber="@endPage"
-                       asp-route-count="@endPageItemCount"
-                       asp-route-prevPage="false"
-                       class="btn btn-outline-secondary @nextDisabled">End</a>
+                                                <a asp-action="Index"
+                                                   asp-route-pageNumber="@endPage"
+                                                   asp-route-count="@endPageItemCount"
+                                                   asp-route-prevPage="false"
+                                                   class="btn btn-outline-secondary @nextDisabled">End</a>
                 }
             }
 
-            <a asp-action="Index"
-               asp-route-pageNumber="@(Model.Pager.PageIndex + 1)"
-               asp-route-count="@count"
-               asp-route-prevPage="false"
-               class="btn btn-outline-secondary @nextDisabled">Next</a>
+                                        <a asp-action="Index"
+                                           asp-route-pageNumber="@(Model.Pager.PageIndex + 1)"
+                                           asp-route-count="@count"
+                                           asp-route-prevPage="false"
+                                           class="btn btn-outline-secondary @nextDisabled">Next</a>
         }
 
         
@@ -180,8 +165,27 @@
             }
         }, 10000); // 10 seconds in milliseconds
 
-        $(".submit-form").click(function (e) {
-            if ($("#TrackerViewModel_Completed").val().length < 1 || $("#TrackerViewModel_Planned").val().length < 1) {
+        $(".modal-btn").click(function (e) {
+
+            var viewNumber = 1;
+
+            if ($(this).attr('id').toLowerCase() == "reportModal".toLowerCase()) viewNumber = 2;
+            
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("LoadPartialView")' + '?viewNumber='+viewNumber,
+                success: function (response) {
+                    $('#loadModalData').html(response);
+                },
+                error: function () {
+                    $('#loadModalData').html("Error Generating View");
+                }
+            })
+        });
+
+        $("#registerForm").on("submit", function (e) {
+            e.preventDefault();
+            if ($("#Completed").val().length < 1 || $("#Planned").val().length < 1) {
                 alert("Both field are required");
                 e.preventDefault();
             }
