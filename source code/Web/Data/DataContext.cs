@@ -6,7 +6,12 @@ namespace web.Data
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options) {}
+        private readonly IConfiguration _configuration;
+
+        public DataContext(DbContextOptions<DataContext> options, IConfiguration configuration) : base(options) 
+        {
+            _configuration = configuration;
+        }
 
         public DbSet<Tracker> Trackers { get; set; }
         public DbSet<AchievementResult> AchievementResults { get; set; }

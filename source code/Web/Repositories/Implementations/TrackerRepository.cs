@@ -22,9 +22,7 @@ namespace Web.Repositories.Implementations
 
         public async Task<(Pager<Tracker>, decimal?)> GetAll(int pageNumber = 1, int pageSize = 10)
         {
-            try
-            {
-                string? sql = @"
+            string? sql = @"
                                 SELECT ISNULL(
                                     NULLIF(
                                         (SELECT 
@@ -34,16 +32,11 @@ namespace Web.Repositories.Implementations
                                             END 
                                         FROM Tracker t), 0), 0) as Result";
 
-                decimal? achievement = _dataContext.AchievementResults.FromSqlRaw(sql).AsNoTracking().AsEnumerable().FirstOrDefault()?.Result;
+            decimal? achievement = _dataContext.AchievementResults.FromSqlRaw(sql).AsNoTracking().AsEnumerable().FirstOrDefault()?.Result;
 
-                var pagedList = await Pager<Tracker>.CreateAsync(_dataContext.Trackers.OrderByDescending(x => x.Date), pageNumber, pageSize);
+            var pagedList = await Pager<Tracker>.CreateAsync(_dataContext.Trackers.OrderByDescending(x => x.Date), pageNumber, pageSize);
 
-                return (pagedList, achievement);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return (pagedList, achievement);
 
         }
 

@@ -12,7 +12,14 @@ builder.Services.AddControllersWithViews();
 
 #region Connection String
 var connectionStrings = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<DataContext>(opt => opt.UseSqlServer(connectionStrings));
+builder.Services.AddDbContext<DataContext>(opt => opt.UseSqlServer(connectionStrings,
+    sqlServerOptionsAction: sqlAction =>
+    {
+        sqlAction.EnableRetryOnFailure(
+            maxRetryCount: 10,
+            maxRetryDelay: TimeSpan.FromSeconds(5),
+            errorNumbersToAdd: null);
+    }));
 #endregion
 
 #region Unit of work
