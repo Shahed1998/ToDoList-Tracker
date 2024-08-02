@@ -5,32 +5,34 @@
     var TrackingList = Model.Pager;
     int count = ViewBag.Count;
     decimal achievements = ViewBag.Achievements;
+    int pageNumber = ViewBag.PageNumber;
+    int pageSize = ViewBag.PageSize;
 
     if (isSaved == true)
     {
-                <div id="successMessage" class="alert alert-success" role="alert">Successful</div>
+        <div id="successMessage" class="alert alert-success" role="alert">Successful</div>
     }
-    else if(isSaved == false)
+    else if (isSaved == false)
     {
-                <div id="failedMessage" class="alert alert-danger" role="alert">
-                    Failed
-                </div>
+        <div id="failedMessage" class="alert alert-danger" role="alert">
+            Failed
+        </div>
     }
 }
 
 <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">To Do List completed</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div id="loadModalData"></div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">To Do List completed</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
+            <div id="loadModalData"></div>
         </div>
     </div>
+</div>
 
 
 
@@ -72,17 +74,53 @@
                         foreach (var t in TrackingList)
                         {
                             count += 1;
-                                                            <tr class="align-middle">
-                                                                <th scope="row">@count</th>
-                                                                <td>@t.Completed</td>
-                                                                <td>@t.Planned</td>
-                                                                <td>@t.Percentage</td>
-                                                                <td>@t.Date?.ToString("dd-MM-yyyy")</td>
-                                                                <td>
-                                                                    @* <a asp-controller="Tracking" asp-action="Edit" asp-route-id="@t.Id" class="btn btn-secondary"><i class="fa-solid fa-pen-to-square"></i></a> *@
-                                                                    <a asp-controller="Tracking" asp-action="Delete" asp-route-id="@t.Id" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
-                                                                </td>
-                                                            </tr>
+                            <tr class="align-middle">
+                                <th scope="row">@count</th>
+                                <td>@t.Completed</td>
+                                <td>@t.Planned</td>
+                                <td>@t.Percentage</td>
+                                <td>@t.Date?.ToString("dd-MM-yyyy")</td>
+                                <td>
+                                    @{
+                                        if (t.Date.GetValueOrDefault().ToString("dd-MM-yyyy") == DateTime.Now.ToString("dd-MM-yyyy"))
+                                        {
+                                            <a asp-controller="Tracking"
+                                               asp-action="GetEdit"
+                                               asp-route-id="@t.Id"
+                                               id="Edit"
+                                               class="btn btn-secondary"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-placement="bottom"
+                                               title="Edit">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-controller="Tracking"
+                                               asp-action="GetEdit"
+                                               asp-route-id="@t.Id"
+                                               id="Edit"
+                                               class="btn btn-secondary disabled"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-placement="bottom"
+                                               title="Edit">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </a>
+                                        }
+                                    }
+
+                                    <a asp-controller="Tracking"
+                                       asp-action="Delete"
+                                       asp-route-id="@t.Id"
+                                       class="btn btn-danger"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-placement="bottom"
+                                       title="Delete">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
                         }
                     }
                 </tbody>
@@ -90,7 +128,9 @@
         }
         else
         {
-            <div>No data available</div><hr/>
+            <div>No data available</div>
+
+            <hr />
         }
 
     </div>
@@ -102,7 +142,7 @@
             var nextDisabled = !Model.Pager.NextPage ? "disabled" : "";
             var endPage = Model.Pager.TotalPages;
             var tab = Model.Pager.Count();
-           
+
             var pagerModel = Model.Pager;
 
             // var pIndex = (pagerModel.PageIndex - 1);
@@ -110,40 +150,40 @@
             var endPageItemCount = (pagerModel.TotalPages - 1) * pagerModel.PageSize;
             var prevPageTotalCount = pagerModel.PageIndex * pagerModel.PageSize - pagerModel.PageSize + 1;
 
-                                            <a asp-action="Index"
-                                               asp-route-pageNumber="@(Model.Pager.PageIndex - 1)"
-                                               asp-route-count="@prevPageTotalCount"
-                                               asp-route-prevPage="true"
-                                            class="btn btn-outline-secondary @prevDisabled">Previous</a>
+            <a asp-action="Index"
+               asp-route-pageNumber="@(Model.Pager.PageIndex - 1)"
+               asp-route-count="@prevPageTotalCount"
+               asp-route-prevPage="true"
+               class="btn btn-outline-secondary @prevDisabled">Previous</a>
 
             if (ViewBag.PageNumber != 1)
             {
-                                                <a asp-action="Index"
-                                                   asp-route-pageNumber="1"
-                                                   asp-route-prevPage="true"
-                                                class="btn btn-outline-secondary @prevDisabled">Start</a>
+                <a asp-action="Index"
+                   asp-route-pageNumber="1"
+                   asp-route-prevPage="true"
+                   class="btn btn-outline-secondary @prevDisabled">Start</a>
             }
 
             if (endPage > 1)
             {
-                if(! string.Equals(nextDisabled, "disabled", StringComparison.OrdinalIgnoreCase))
+                if (!string.Equals(nextDisabled, "disabled", StringComparison.OrdinalIgnoreCase))
                 {
-                                                    <a asp-action="Index"
-                                                       asp-route-pageNumber="@endPage"
-                                                       asp-route-count="@endPageItemCount"
-                                                       asp-route-prevPage="false"
-                                                       class="btn btn-outline-secondary @nextDisabled">End</a>
+                    <a asp-action="Index"
+                       asp-route-pageNumber="@endPage"
+                       asp-route-count="@endPageItemCount"
+                       asp-route-prevPage="false"
+                       class="btn btn-outline-secondary @nextDisabled">End</a>
                 }
             }
 
-                                            <a asp-action="Index"
-                                               asp-route-pageNumber="@(Model.Pager.PageIndex + 1)"
-                                               asp-route-count="@count"
-                                               asp-route-prevPage="false"
-                                               class="btn btn-outline-secondary @nextDisabled">Next</a>
+            <a asp-action="Index"
+               asp-route-pageNumber="@(Model.Pager.PageIndex + 1)"
+               asp-route-count="@count"
+               asp-route-prevPage="false"
+               class="btn btn-outline-secondary @nextDisabled">Next</a>
         }
 
-        
+
     </div>
 </div>
 

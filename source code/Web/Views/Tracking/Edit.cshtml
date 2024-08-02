@@ -1,0 +1,42 @@
+﻿@model Web.Models.Business_Entities.TrackerViewModel
+
+<form id="registerForm" method="post" asp-action="PostEdit">
+
+    <input type="hidden" asp-for="Id"/>
+    <input type="hidden" asp-for="Percentage"/>
+
+    <div class="modal-body">
+        <div class="form-group">
+            <label asp-for="Completed"></label>
+            <input asp-for="Completed" class="form-control" />
+            <span asp-validation-for="Completed" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Planned"></label>
+            <input asp-for="Planned" class="form-control" />
+            <span asp-validation-for="Planned" class="text-danger .planned-validation-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Date"></label>
+            <input asp-for="Date" class="form-control" type="date"/>
+            <span asp-validation-for="Date" class="text-danger .planned-validation-error"></span>
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <a asp-controller="Tracking"
+            asp-action="Index"
+            class="btn btn-secondary">
+            Close
+        </a>
+
+        <button type="submit" class="btn btn-primary submit-form">Submit</button>
+    </div>
+</form>
+
+@* @section Scripts {
+    <script src="~/js/tracking.js" asp-append-version="true"></script>
+} *@

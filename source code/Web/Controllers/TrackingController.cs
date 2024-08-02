@@ -14,7 +14,6 @@ namespace Web.Controllers
         }
 
         public async Task<IActionResult> Index([FromBody] bool? IsSaved, int pageNumber=1, int pageSize=5, int count = 0, bool prevPage = false) 
-        
         {
 
             if (prevPage)
@@ -41,6 +40,7 @@ namespace Web.Controllers
             ViewBag.Achievements = trackingList.Item2;
             ViewBag.Count = count;
             ViewBag.PageNumber = pageNumber;
+            ViewBag.PageSize = pageSize;
 
             return View(model);
         }
@@ -65,13 +65,39 @@ namespace Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Route("Tracking/Edit/{Id}")]
-        public IActionResult Edit(string Id)
+        [HttpGet("Edit")]
+        public async Task<IActionResult> GetEdit(int Id)
         {
-            throw new NotImplementedException();
+            var model = await _trackerService.GetTrackerById(Id);
+            return View("Edit", model);
         }
 
-        
+        [HttpPost("Edit")]
+        public async Task<IActionResult> PostEdit(TrackerViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Edit", model);
+            }
+
+            var isUpdated = await _trackerService.Update(model);
+
+            if(!isUpdated) 
+            {
+                ModelState.AddModelError("isSaved", "Unable to update");
+                return View("Edit", model);
+            }
+
+            return RedirectToAction("Index");
+
+            //ViewBag.PageNumber = pageNumber;
+            //ViewBag.PageSize = pageSize;
+            //ViewBag.Count = count;
+            //var model = await _trackerService.GetTrackerById(Id);
+            //return View("Edit", model);
+        }
+
+
         public IActionResult LoadPartialView(int viewNumber)
         {
             if (viewNumber == 2) return PartialView("_Report", new TrackerViewModel());

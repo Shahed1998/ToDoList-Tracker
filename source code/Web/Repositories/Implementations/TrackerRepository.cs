@@ -48,5 +48,22 @@ namespace Web.Repositories.Implementations
                 _dataContext.Trackers.Remove(entity);
             }
         }
+
+        public async Task Edit(Tracker model)
+        {
+            var entity = await _dataContext.Trackers.FindAsync(model.Id);
+
+            model.Percentage = (model.Completed/model.Planned) * 100;
+
+            if (entity != null)
+            {
+                _dataContext.Trackers.Entry(entity).CurrentValues.SetValues(model);
+            }
+        }
+
+        public async Task<Tracker?> GetById(int id)
+        {
+            return await _dataContext.Trackers.FindAsync(id);
+        }
     }
 }

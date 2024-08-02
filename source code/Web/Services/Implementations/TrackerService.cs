@@ -35,5 +35,18 @@ namespace Web.Services.Implementations
             await _unitOfWork.TrackerRepository.Delete(Id);
             return await _unitOfWork.SaveAsync();
         }
+
+        public async Task<bool> Update(TrackerViewModel viewModel)
+        {
+            await _unitOfWork.TrackerRepository.Edit((Tracker)viewModel);
+            return await _unitOfWork.SaveAsync();
+        }
+
+        public async Task<TrackerViewModel?> GetTrackerById(int id)
+        {
+            var tracker = await _unitOfWork.TrackerRepository.GetById(id);
+            if (tracker == null) return new TrackerViewModel();
+            return (TrackerViewModel)tracker;
+        }
     }
 }

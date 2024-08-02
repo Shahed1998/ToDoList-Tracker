@@ -35,7 +35,9 @@ namespace Web.Models.Business_Entities
         public static explicit operator Tracker(TrackerViewModel t) => new Tracker()
         {
             Completed = t.Completed,
-            Planned = t.Planned
+            Planned = t.Planned,
+            Date = t.Date,
+            Id = t.Id,
         };
         #endregion
     }
