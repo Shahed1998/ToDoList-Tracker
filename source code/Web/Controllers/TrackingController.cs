@@ -69,7 +69,7 @@ namespace Web.Controllers
         public async Task<IActionResult> GetEdit(int Id)
         {
             var model = await _trackerService.GetTrackerById(Id);
-            return View("Edit", model);
+            return PartialView("Edit", model);
         }
 
         [HttpPost("Edit")]
@@ -77,7 +77,7 @@ namespace Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("Edit", model);
+                return PartialView("Edit", model);
             }
 
             var isUpdated = await _trackerService.Update(model);
@@ -85,16 +85,10 @@ namespace Web.Controllers
             if(!isUpdated) 
             {
                 ModelState.AddModelError("isSaved", "Unable to update");
-                return View("Edit", model);
+                return PartialView("Edit", model);
             }
 
             return RedirectToAction("Index");
-
-            //ViewBag.PageNumber = pageNumber;
-            //ViewBag.PageSize = pageSize;
-            //ViewBag.Count = count;
-            //var model = await _trackerService.GetTrackerById(Id);
-            //return View("Edit", model);
         }
 
 
@@ -103,6 +97,5 @@ namespace Web.Controllers
             if (viewNumber == 2) return PartialView("_Report", new TrackerViewModel());
             return PartialView("_Create", new TrackerViewModel());
         }
-
     }
 }

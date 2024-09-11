@@ -11,11 +11,23 @@ setTimeout(function () {
     }
 }, 10000); // 10 seconds in milliseconds
 
-$(".modal-btn").click(function (e) {
-
+$(".create-modal-btn, .report-modal-btn").click(function (e) {
     var viewNumber = 1;
 
     if ($(this).attr('id').toLowerCase() == "reportModal".toLowerCase()) viewNumber = 2;
+
+    switch (viewNumber)
+    {
+        case 1:
+            $('#modalLabel').html("Create");
+            break;
+        case 2:
+            $('#modalLabel').html("Report");
+            break;
+        default:
+            $('#modalLabel').html("");
+            break;
+    }
 
     $.ajax({
         type: "GET",
@@ -28,6 +40,25 @@ $(".modal-btn").click(function (e) {
         }
     })
 });
+
+$('#Edit').click(function(e) {
+    e.preventDefault();
+    $('#modalLabel').html("Edit");
+    $('#loadModalData').html("Loading data while editing");
+
+    $.ajax({
+        type: "GET",
+        url: $(this).attr('href'),
+        success: function (response) {
+            $('#loadModalData').html(response);
+        },
+        error: function () {
+            $('#loadModalData').html("Error Generating View");
+        }
+    })
+
+    $(".edit-modal-btn").click();
+})
 
 $(document).on("submit", "#registerForm", function (e) {
     if ($("#Completed").val().length < 1 || $("#Planned").val().length < 1) {
