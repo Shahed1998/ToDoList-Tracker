@@ -91,9 +91,11 @@ namespace Web.Repositories.Implementations
                     var trackerInfo = "Successfully Updated Tracker from {" +
                         $"Id: {tracker.Id}, Completed: {tracker.Completed}, Planned: {tracker.Planned}," +
                         $" Date: {(tracker.Date != null ? tracker.Date.Value.ToString("MMM dd, yyyy") : String.Empty)}" + "}"+
-                        "To {" +
+                        " To {" +
                         $"Id: {model.Id}, Completed: {model.Completed}, Planned: {model.Planned}," +
                         $" Date: {(model.Date != null ? model.Date.Value.ToString("MMM dd, yyyy") : String.Empty)}" + "}";
+
+                    HelperSerilog.LogInformation(trackerInfo);
                 }
             }
             catch (Exception ex)
