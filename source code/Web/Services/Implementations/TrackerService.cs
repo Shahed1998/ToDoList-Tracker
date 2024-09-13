@@ -32,14 +32,12 @@ namespace Web.Services.Implementations
 
         public async Task<bool> Delete(int Id)
         {
-            await _unitOfWork.TrackerRepository.Delete(Id);
-            return await _unitOfWork.SaveAsync();
+            return await _unitOfWork.TrackerRepository.Delete(Id) > 0;
         }
 
         public async Task<bool> Update(TrackerViewModel viewModel)
         {
-            await _unitOfWork.TrackerRepository.Edit((Tracker)viewModel);
-            return await _unitOfWork.SaveAsync();
+            return await _unitOfWork.TrackerRepository.Edit((Tracker)viewModel)>0;
         }
 
         public async Task<TrackerViewModel?> GetTrackerById(int id)

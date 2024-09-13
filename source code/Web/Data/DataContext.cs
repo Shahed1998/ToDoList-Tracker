@@ -15,10 +15,5 @@ namespace web.Data
 
         public DbSet<Tracker> Trackers { get; set; }
         public DbSet<AchievementResult> AchievementResults { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<AchievementResult>().HasNoKey();
-        }
     }
 }

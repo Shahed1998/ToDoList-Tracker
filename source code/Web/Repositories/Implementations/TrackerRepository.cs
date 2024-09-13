@@ -1,5 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 using web.Data;
+using Web.Helpers;
 using Web.Models.Business_Entities;
 using Web.Models.General_Entities;
 using Web.Repositories.Interfaces;
@@ -22,43 +25,86 @@ namespace Web.Repositories.Implementations
 
         public async Task<(Pager<Tracker>, decimal?)> GetAll(int pageNumber = 1, int pageSize = 10)
         {
-            string? sql = @"
-                                SELECT ISNULL(
-                                    NULLIF(
-                                        (SELECT 
-                                            CASE 
-                                                WHEN SUM(t.Planned) = 0 THEN 0 
-                                                ELSE CAST(SUM(t.Completed) / SUM(t.Planned) * 100 AS DECIMAL(6,2)) 
-                                            END 
-                                        FROM Tracker t), 0), 0) as Result";
 
-            decimal? achievement = _dataContext.AchievementResults.FromSqlRaw(sql).AsNoTracking().AsEnumerable().FirstOrDefault()?.Result;
+            AchievementResult? achievement = await _dataContext.AchievementResults.FirstOrDefaultAsync();
 
             var pagedList = await Pager<Tracker>.CreateAsync(_dataContext.Trackers.OrderByDescending(x => x.Date), pageNumber, pageSize);
 
-            return (pagedList, achievement);
+            return (pagedList, (achievement == null ? Decimal.Zero : achievement.Result));
 
         }
 
-        public async Task Delete(int Id)
+        public async Task<int> Delete(int Id)
         {
-            var entity = await _dataContext.Trackers.FindAsync(Id);
-            if (entity != null)
+            int rowsUpdated = 0;
+            try
             {
-                _dataContext.Trackers.Remove(entity);
+                Tracker? tracker = await _dataContext.Trackers.FindAsync(Id);
+
+                if(tracker != null)
+                {
+                    var sql = $"DELETE FROM Tracker WHERE Id=@Id";
+                    var parameter = new SqlParameter("@Id", Id);
+                    rowsUpdated = await _dataContext.Database.ExecuteSqlRawAsync(sql, parameter);
+
+                    var trackerInfo = "Successfully Deleted Tracker {"+
+                        $"Id: {tracker.Id}, Completed: {tracker.Completed}, Planned: {tracker.Planned}," +
+                        $" Date: {(tracker.Date != null? tracker.Date.Value.ToString("MMM dd, yyyy"): String.Empty)}" + "}";
+
+                    if(rowsUpdated > 0) HelperSerilog.LogInformation(trackerInfo);
+                }
             }
+            catch(Exception ex)
+            {
+                HelperSerilog.LogError(ex.Message, ex);    
+            }
+            finally
+            {
+                HelperSerilog.CloseAndFlushLogger();
+            }
+            return rowsUpdated;
         }
 
-        public async Task Edit(Tracker model)
+        public async Task<int> Edit(Tracker model)
         {
-            var entity = await _dataContext.Trackers.FindAsync(model.Id);
-
-            model.Percentage = (model.Completed/model.Planned) * 100;
-
-            if (entity != null)
+            var rowsUpdate = 0;
+            try
             {
-                _dataContext.Trackers.Entry(entity).CurrentValues.SetValues(model);
+                var tracker = await _dataContext.Trackers.FindAsync(model.Id);
+
+                if (tracker != null) 
+                {
+                    model.Percentage = (model.Completed / model.Planned) * 100;
+
+                    var sql = "UPDATE Tracker SET Completed=@Completed, Planned=@Planned, Percentage=@Percentage, Date=@Date WHERE Id=@Id";
+
+                    var parameters = new List<SqlParameter>();
+
+                    parameters.Add(new SqlParameter("@Completed", model.Completed));
+                    parameters.Add(new SqlParameter("@Planned", model.Planned));
+                    parameters.Add(new SqlParameter("@Percentage", (model.Completed / model.Planned) * 100));
+                    parameters.Add(new SqlParameter("@Date", model.Date));
+                    parameters.Add(new SqlParameter("@Id", model.Id));
+
+                    rowsUpdate = await _dataContext.Database.ExecuteSqlRawAsync(sql, parameters);
+
+                    var trackerInfo = "Successfully Updated Tracker from {" +
+                        $"Id: {tracker.Id}, Completed: {tracker.Completed}, Planned: {tracker.Planned}," +
+                        $" Date: {(tracker.Date != null ? tracker.Date.Value.ToString("MMM dd, yyyy") : String.Empty)}" + "}"+
+                        "To {" +
+                        $"Id: {model.Id}, Completed: {model.Completed}, Planned: {model.Planned}," +
+                        $" Date: {(model.Date != null ? model.Date.Value.ToString("MMM dd, yyyy") : String.Empty)}" + "}";
+                }
             }
+            catch (Exception ex)
+            {
+                HelperSerilog.LogError(ex.Message, ex);
+            }
+            finally
+            {
+                HelperSerilog.CloseAndFlushLogger();
+            }
+            return rowsUpdate;
         }
 
         public async Task<Tracker?> GetById(int id)
