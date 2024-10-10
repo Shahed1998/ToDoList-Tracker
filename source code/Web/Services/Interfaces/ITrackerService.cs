@@ -9,5 +9,6 @@ namespace Web.Services.Interfaces
         Task<TrackerViewModel?> GetTrackerById(int id);
         Task<bool> Delete(int Id);
         Task<bool> Update(TrackerViewModel viewModel);
+        Task<bool> DeleteAll();
     }
 }

@@ -23,16 +23,12 @@
             <input asp-for="Date" class="form-control" type="date"/>
             <span asp-validation-for="Date" class="text-danger .planned-validation-error"></span>
         </div>
-
     </div>
-
     <div class="modal-footer">
-        <a asp-controller="Tracking"
-            asp-action="Index"
-            class="btn btn-secondary">
-            Close
-        </a>
-
+        @* data-bs-dismiss="modal" *@
+        <button type="button" class="btn btn-secondary tdlst_modal_close_btn">Close</button>
         <button type="submit" class="btn btn-primary submit-form">Submit</button>
     </div>
 </form>
+
+<script src="~/js/tracking.js"></script>

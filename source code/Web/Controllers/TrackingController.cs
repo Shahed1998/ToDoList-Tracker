@@ -91,6 +91,11 @@ namespace Web.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<JsonResult> DeleteAll()
+        {
+            return new JsonResult(new { isSuccessfullyDeleted = await _trackerService.DeleteAll() });
+        }
+
 
         public IActionResult LoadPartialView(int viewNumber)
         {

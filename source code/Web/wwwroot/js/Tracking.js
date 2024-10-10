@@ -57,7 +57,7 @@ $('#Edit').click(function(e) {
         }
     })
 
-    $(".edit-modal-btn").click();
+    $('#exampleModal').modal("show");
 })
 
 $(document).on("submit", "#registerForm", function (e) {
@@ -65,4 +65,45 @@ $(document).on("submit", "#registerForm", function (e) {
         alert("Both field are required");
         e.preventDefault();
     }
+});
+
+$('#deleteAll').click(function(e) {
+    e.preventDefault();
+
+    $('#exampleModal #modalLabel').text("Do you want to delete all trackers?");
+
+    var deleteAllPermissionBtns = '<div class="p-2">'
+        + '<button class="btn btn-danger yes-delete-all" data-url="/Tracking/DeleteAll">Yes</button>'
+        + '<button class="btn btn-secondary mx-2 no-delete-all">No</button>'
+        + '</div>';
+
+    $('#exampleModal #loadModalData').html(deleteAllPermissionBtns);
+
+    $('#exampleModal').modal("show");
+
+});
+
+$('#exampleModal').on('click', '.yes-delete-all', function (e) {
+    console.log($(this).data('url'))
+    $.ajax({
+        type: "GET",
+        url: $(this).data('url'),
+        success: function (response) {
+            window.location.href = "/Tracking/Index";
+        },
+        error: function (err) {
+            console.log(err);
+            alert("An error occured");
+        }
+    })
+})
+
+$('#exampleModal').on('click', '.no-delete-all', function (e) {
+    $('#exampleModal').modal("hide");
+});
+
+$('.tdlst_modal_close_btn').click(function (e) {
+    e.preventDefault();
+    $("loadModalData").html("");
+    $('#exampleModal').modal("hide");
 });

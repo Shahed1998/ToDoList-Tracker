@@ -113,5 +113,26 @@ namespace Web.Repositories.Implementations
         {
             return await _dataContext.Trackers.FindAsync(id);
         }
+
+        public async Task<bool> DeleteAll()
+        {
+            bool success = false;
+            try
+            {
+                var sql = "EXEC usp_ClearAllTrackers";
+                int rowsUpdated = await _dataContext.Database.ExecuteSqlRawAsync(sql);
+                if (rowsUpdated > 0)
+                {
+                    success = true;
+                    HelperSerilog.LogInformation("Deleted all data on date: " + DateTime.Now.ToString("MMM dd, yyyy hh:mm tt"));
+                }
+            }
+            catch (Exception ex)
+            {
+                HelperSerilog.LogError($"{ex.Message}", ex);
+            }
+            finally { HelperSerilog.CloseAndFlushLogger(); }
+            return success;
+        }
     }
 }

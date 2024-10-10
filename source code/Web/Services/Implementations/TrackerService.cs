@@ -46,5 +46,10 @@ namespace Web.Services.Implementations
             if (tracker == null) return new TrackerViewModel();
             return (TrackerViewModel)tracker;
         }
+
+        public async Task<bool> DeleteAll()
+        {
+            return await _unitOfWork.TrackerRepository.DeleteAll();
+        }
     }
 }

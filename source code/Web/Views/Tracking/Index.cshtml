@@ -20,7 +20,7 @@
     }
 }
 
-<!-- Modal -->
+<!-- Modal-->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -28,7 +28,6 @@
                 <h5 class="modal-title" id="modalLabel">To Do List completed</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div id="loadModalData"></div>
         </div>
     </div>
@@ -47,8 +46,8 @@
                 <button type="button" class="btn btn-primary report-modal-btn d-none" id="reportModal" data-bs-toggle="modal" data-bs-target="#exampleModal" data-url="@Url.Action("LoadPartialView")">
                     Report
                 </button>
-                <button type="button" class="btn btn-primary edit-modal-btn d-none" id="reportModal" data-bs-toggle="modal" data-bs-target="#exampleModal" data-url="@Url.Action("LoadPartialView")">
-                    Edit
+                <button type="button" class="btn btn-danger" id="deleteAll">
+                    Clear all
                 </button>
             </div>
             <div class="col-md-3"></div>

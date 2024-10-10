@@ -10,5 +10,6 @@ namespace Web.Repositories.Interfaces
         Task<Tracker?> GetById(int id);
         Task<int> Delete(int Id);
         Task<int> Edit(Tracker model);
+        Task<bool> DeleteAll();
     }
 }

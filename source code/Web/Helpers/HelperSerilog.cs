@@ -14,7 +14,7 @@ namespace Web.Helpers
                             .MinimumLevel.Debug()
                             .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Information)
                                 .WriteTo.File(Path.Combine(loggingDir, "Information", "information-.log"),
-                                      rollingInterval: RollingInterval.Day))
+                                      rollingInterval: RollingInterval.Month))
                             .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Error)
                                 .WriteTo.File(Path.Combine(loggingDir, "Error", "error-.log"),
                                       rollingInterval: RollingInterval.Day))
