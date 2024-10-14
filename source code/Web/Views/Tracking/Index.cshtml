@@ -40,14 +40,24 @@
         <div class="row">
             <div class="col-md-3">
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary create-modal-btn" id="createModal" data-bs-toggle="modal" data-bs-target="#exampleModal" data-url="@Url.Action("LoadPartialView")">
-                    Create
+                <button type="button"
+                        class="btn btn-primary"
+                        id="createModalButton"
+                        data-url="@Url.Action("LoadPartialView")"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        title="Create">
+                    <i class="fa-solid fa-plus"></i>
                 </button>
                 <button type="button" class="btn btn-primary report-modal-btn d-none" id="reportModal" data-bs-toggle="modal" data-bs-target="#exampleModal" data-url="@Url.Action("LoadPartialView")">
                     Report
                 </button>
-                <button type="button" class="btn btn-danger" id="deleteAll">
-                    Clear all
+                <button type="button"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        title="Restart"
+                        class="btn btn-danger" id="deleteAll">
+                    <i class="fa-solid fa-arrows-rotate"></i>
                 </button>
             </div>
             <div class="col-md-3"></div>
@@ -89,8 +99,7 @@
                                             <a asp-controller="Tracking"
                                                asp-action="GetEdit"
                                                asp-route-id="@t.Id"
-                                               id="Edit"
-                                               class="btn btn-secondary"
+                                               class="btn btn-secondary Edit"
                                                data-bs-toggle="tooltip"
                                                data-bs-placement="bottom"
                                                data-itemid="@t.Id"
@@ -103,8 +112,7 @@
                                             <a asp-controller="Tracking"
                                                asp-action="GetEdit"
                                                asp-route-id="@t.Id"
-                                               id="Edit"
-                                               class="btn btn-secondary disabled"
+                                               class="btn btn-secondary disabled Edit"
                                                data-bs-toggle="tooltip"
                                                data-bs-placement="bottom"
                                                title="Edit">
@@ -116,7 +124,7 @@
                                     <a asp-controller="Tracking"
                                        asp-action="Delete"
                                        asp-route-id="@t.Id"
-                                       class="btn btn-danger"
+                                       class="btn btn-danger delete-tracker"
                                        data-bs-toggle="tooltip"
                                        data-bs-placement="bottom"
                                        title="Delete">

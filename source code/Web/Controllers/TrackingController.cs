@@ -91,9 +91,13 @@ namespace Web.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<JsonResult> DeleteAll()
+        public async Task<IActionResult> DeleteAll()
         {
-            return new JsonResult(new { isSuccessfullyDeleted = await _trackerService.DeleteAll() });
+            var isSuccessfullyDeleted = await _trackerService.DeleteAll();
+
+            TempData["isSaved"] = isSuccessfullyDeleted;
+
+            return RedirectToAction("Index");
         }
 
 
