@@ -20,24 +20,13 @@
     }
 }
 
-<!-- Modal-->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">To Do List completed</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div id="loadModalData"></div>
-        </div>
-    </div>
-</div>
-
+@* Modal *@
+<partial name="Partials/_Modal.cshtml"/>
 
 <div class="panel panel-default">
-    <div class="panel-header container-fluid">
+    <div class="panel-header">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-4">
                 <!-- Button trigger modal -->
                 <button type="button"
                         class="btn btn-primary"
@@ -59,9 +48,7 @@
                     <i class="fa-solid fa-arrows-rotate"></i>
                 </button>
             </div>
-            <div class="col-md-3"></div>
-            <div class="col-md-3"></div>
-            <div class="col-md-3 d-flex align-items-center justify-content-center">
+            <div class="col-8 d-flex align-items-center justify-content-end pe-5">
                 <span><i class="fa-solid fa-trophy"></i> Achieved : @achievements %</span>
             </div>
         </div>
@@ -72,7 +59,7 @@
             <table class="table">
                 <thead>
                     <tr class="table-dark">
-                        <th scope="col">Id</th>
+                        <th scope="col">SL No.</th>
                         <th scope="col">Completed (hours)</th>
                         <th scope="col">Planned (hours)</th>
                         <th scope="col">Percentage (%)</th>
@@ -82,55 +69,11 @@
                 </thead>
                 <tbody>
                     @{
-                        foreach (var t in TrackingList)
+                        foreach (var tracker in TrackingList)
                         {
                             count += 1;
-                            <tr class="align-middle">
-                                <th scope="row">@count</th>
-                                <td>@t.Completed</td>
-                                <td>@t.Planned</td>
-                                <td>@t.Percentage</td>
-                                <td>@t.Date?.ToString("MMM dd, yyyy")</td>
-                                <td>
-                                    @{
-                                        if (t.Date.GetValueOrDefault().ToString("dd-MM-yyyy") == DateTime.Now.ToString("dd-MM-yyyy"))
-                                        {
-                                            <a asp-controller="Tracking"
-                                               asp-action="GetEdit"
-                                               asp-route-id="@t.Id"
-                                               class="btn btn-secondary Edit"
-                                               data-bs-toggle="tooltip"
-                                               data-bs-placement="bottom"
-                                               data-itemid="@t.Id"
-                                               title="Edit">
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <a asp-controller="Tracking"
-                                               asp-action="GetEdit"
-                                               asp-route-id="@t.Id"
-                                               class="btn btn-secondary disabled Edit"
-                                               data-bs-toggle="tooltip"
-                                               data-bs-placement="bottom"
-                                               title="Edit">
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                            </a>
-                                        }
-                                    }
-
-                                    <a asp-controller="Tracking"
-                                       asp-action="Delete"
-                                       asp-route-id="@t.Id"
-                                       class="btn btn-danger delete-tracker"
-                                       data-bs-toggle="tooltip"
-                                       data-bs-placement="bottom"
-                                       title="Delete">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
+                            ViewData["count"] = count;
+                            <partial name="Partials/_TrackingList.cshtml" model="tracker" view-data="ViewData"/>
                         }
                     }
                 </tbody>
@@ -197,7 +140,7 @@
     </div>
 </div>
 
-@section Scripts {
+@* @section Scripts {
     <script src="~/js/tracking.js" asp-append-version="true"></script>
 }
-
+ *@

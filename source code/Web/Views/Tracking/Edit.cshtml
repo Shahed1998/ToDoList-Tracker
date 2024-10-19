@@ -2,8 +2,8 @@
 
 <form id="registerForm" method="post" asp-action="PostEdit">
 
-    <input type="hidden" asp-for="Id"/>
-    <input type="hidden" asp-for="Percentage"/>
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="Percentage" />
 
     <div class="modal-body">
         <div class="form-group">
@@ -20,9 +20,16 @@
 
         <div class="form-group">
             <label asp-for="Date"></label>
-            <input asp-for="Date" class="form-control" type="date"/>
+            <div class="input-group mb-3">
+                <input asp-for="Date" class="form-control" id="dateInput" type="text" readonly="true" value=""/>
+                <span class="input-group-text bg-light" id="dtp">
+                    <i class="fa-regular fa-calendar"></i>
+                </span>
+            </div>
+
             <span asp-validation-for="Date" class="text-danger .planned-validation-error"></span>
         </div>
+
     </div>
     <div class="modal-footer">
         @* data-bs-dismiss="modal" *@
@@ -31,4 +38,21 @@
     </div>
 </form>
 
-<script src="~/js/tracking.js"></script>
+<script>
+
+    $('#dateInput').on('focus', function (e) {
+        $(this).blur();
+    })
+
+    $('#dateInput').datepicker({
+        format: 'M dd, yyyy',
+        autoclose: true,
+        orientation: 'bottom',
+        showOnFocus: false
+    }).datepicker('setDate', new Date());
+
+    $('#dtp').click(function () {
+        $('#dateInput').datepicker('show');
+    });
+
+</script>

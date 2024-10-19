@@ -1,0 +1,49 @@
+﻿@using Web.Models.Business_Entities
+@model TrackerViewModel
+
+<tr class="align-middle">
+    <th scope="row">@ViewData["count"]</th>
+    <td>@Model.Completed</td>
+    <td>@Model.Planned</td>
+    <td>@Model.Percentage</td>
+    <td>@Model.Date?.ToString("MMM dd, yyyy")</td>
+    <td>
+        @{
+            if (Model.Date.GetValueOrDefault().ToString("dd-MM-yyyy") == DateTime.Now.ToString("dd-MM-yyyy"))
+            {
+                <a asp-controller="Tracking"
+                   asp-action="GetEdit"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-secondary Edit"
+                   data-bs-toggle="tooltip"
+                   data-bs-placement="bottom"
+                   data-itemid="@Model.Id"
+                   title="Edit">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Tracking"
+                   asp-action="GetEdit"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-secondary disabled Edit"
+                   data-bs-toggle="tooltip"
+                   data-bs-placement="bottom"
+                   title="Edit">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+            }
+        }
+
+        <a asp-controller="Tracking"
+           asp-action="Delete"
+           asp-route-id="@Model.Id"
+           class="btn btn-danger delete-tracker"
+           data-bs-toggle="tooltip"
+           data-bs-placement="bottom"
+           title="Delete">
+            <i class="fa-solid fa-trash"></i>
+        </a>
+    </td>
+</tr>
