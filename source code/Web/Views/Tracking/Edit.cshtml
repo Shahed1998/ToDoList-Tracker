@@ -40,19 +40,21 @@
 
 <script>
 
-    $('#dateInput').on('focus', function (e) {
-        $(this).blur();
+    $(document).ready(function() {
+        $('#dateInput').on('focus', function (e) {
+            $(this).blur();
+        })
+
+        $('#dateInput').datepicker({
+            format: 'M dd, yyyy',
+            autoclose: true,
+            orientation: 'bottom',
+            showOnFocus: false
+        }).datepicker('setDate', new Date());
+
+        $('#dtp').click(function () {
+            $('#dateInput').datepicker('show');
+        });
     })
-
-    $('#dateInput').datepicker({
-        format: 'M dd, yyyy',
-        autoclose: true,
-        orientation: 'bottom',
-        showOnFocus: false
-    }).datepicker('setDate', new Date());
-
-    $('#dtp').click(function () {
-        $('#dateInput').datepicker('show');
-    });
 
 </script>

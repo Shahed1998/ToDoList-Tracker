@@ -1,16 +1,4 @@
-﻿// Function to remove the success message after 10 seconds
-setTimeout(function () {
-    var successMessage = document.getElementById('successMessage');
-    var failedMessage = document.getElementById('failedMessage');
-    if (successMessage) {
-        successMessage.remove();
-    }
-    else if (failedMessage) {
-        failedMessage.remove();
-
-    }
-}, 10000); // 10 seconds in milliseconds
-
+﻿
 $("#createModalButton").click(function (e) {
     var viewNumber = 1;
     $('#modalLabel').text("Create");

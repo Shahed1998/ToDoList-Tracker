@@ -13,7 +13,7 @@ namespace Web.Controllers
             _trackerService = trackerService;
         }
 
-        public async Task<IActionResult> Index([FromBody] bool? IsSaved, int pageNumber=1, int pageSize=5, int count = 0, bool prevPage = false) 
+        public async Task<IActionResult> Index(bool? IsSaved, int pageNumber=1, int pageSize=5, int count = 0, bool prevPage = false) 
         {
 
             if (prevPage)
@@ -36,7 +36,7 @@ namespace Web.Controllers
 
             var end = model.Pager.Count();
 
-            ViewBag.IsSaved = TempData["isSaved"];
+            ViewBag.IsSaved = IsSaved;
             ViewBag.Achievements = trackingList.Item2;
             ViewBag.Count = count;
             ViewBag.PageNumber = pageNumber;
@@ -50,9 +50,7 @@ namespace Web.Controllers
         {
             bool ts = await _trackerService.AddTracker(model);
 
-            TempData["isSaved"] = ts;
-
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { IsSaved = ts });
         }
 
         [Route("Tracking/Delete/{Id}")]
@@ -60,9 +58,7 @@ namespace Web.Controllers
         {
             bool isSaved = await _trackerService.Delete(Id);
 
-            TempData["isSaved"] = isSaved;
-
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { IsSaved = isSaved });
         }
 
         [HttpGet("Edit")]
@@ -88,16 +84,14 @@ namespace Web.Controllers
                 return PartialView("Edit", model);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { IsSaved = true });
         }
 
         public async Task<IActionResult> DeleteAll()
         {
             var isSuccessfullyDeleted = await _trackerService.DeleteAll();
 
-            TempData["isSaved"] = isSuccessfullyDeleted;
-
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { IsSaved = isSuccessfullyDeleted });
         }
 
 
