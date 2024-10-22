@@ -4,7 +4,7 @@ using Web.Services.Interfaces;
 
 namespace Web.Controllers
 {
-    public class TrackingController : Controller
+    public class TrackingController : BaseController
     {
         private readonly ITrackerService _trackerService;
 

@@ -1,0 +1,37 @@
+﻿@{
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+
+<div class="login-form p-5 mx-auto d-flex align-items-center justify-content-center">
+    <form class="shadow-lg w-100 p-5">
+      <h3 class="text-center mb-3">Login</h3>
+        <div class="alert alert-info mb-5" role="alert">
+            <div>
+                Most impossible goals can be met simply by breaking them down into bite-size chunks, writing them down, believing them and going full speed ahead as if they were routine.' — Don Lancaster
+            </div>
+        </div>
+
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Username <span class="asterisk">*</span></label>
+        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Password <span class="asterisk">*</span></label>
+        <input type="password" class="form-control" id="exampleInputPassword1">
+        <small><a href="#">Forgot password?</a></small>
+      </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+        <label class="form-check-label" for="exampleCheck1">Remember me</label>
+      </div>
+      <button type="submit" class="btn btn-primary mb-3 w-100">Login</button>
+      <div class="mb-3">
+            Not a member? <a asp-action="Register">Signup now</a>
+      </div>
+    </form>
+</div>
+
+@section Scripts {
+    $(".alert").alert('close')
+}

@@ -1,0 +1,66 @@
+﻿@{
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<div class="login-form p-5 mx-auto d-flex align-items-center justify-content-center">
+    <form class="shadow-lg w-100 p-5">
+        <h3 class="text-center mb-5">Sign up</h3>
+        <div class="mb-3">
+            <label for="username" class="form-label">Username <span class="asterisk">*</span></label>
+            <input type="text" class="form-control" id="username">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email <span class="asterisk">*</span></label>
+            <input type="text" class="form-control" id="email">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password <span class="asterisk">*</span></label>
+            <div class="input-group">
+                <input type="password" class="form-control password-field" id="password">
+                <span class="input-group-text toggle-password">
+                    <i class="fa-regular fa-eye-slash" id="password-icon"></i>
+                </span>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="confirm-password" class="form-label">Confirm Password <span class="asterisk">*</span></label>
+            <div class="input-group">
+                <input type="password" class="form-control password-field" id="confirm-password">
+                <span class="input-group-text toggle-confirm-password">
+                    <i class="fa-regular fa-eye-slash" id="confirm-password-icon"></i>
+                </span>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mb-3 w-100">Sign Up</button>
+        <div class="mb-3">
+            Already have an account? <a asp-action="Login">Login</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        $('.toggle-password').on('click', function () {
+            PasswordToggle('#password', '#password-icon');
+        });
+
+        $('.toggle-confirm-password').on('click', function () {
+            PasswordToggle('#confirm-password', '#confirm-password-icon');
+        })
+
+
+        function PasswordToggle(fieldId, passwordIconId) {
+            var icon = $(passwordIconId);
+
+            if ($(fieldId).attr('type') == "password") {
+                $(fieldId).attr('type', 'text');
+                icon.removeClass('fa-regular fa-eye-slash').addClass('fa-regular fa-eye');
+            }
+            else {
+                $(fieldId).attr('type', 'password');
+                icon.removeClass('fa-regular fa-eye').addClass('fa-regular fa-eye-slash');
+            }
+        }
+
+    </script>
+}
