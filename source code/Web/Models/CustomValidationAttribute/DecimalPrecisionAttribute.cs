@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Web.Models.Business_Entities
+namespace Web.Models.CustomValidationAttribute
 {
     // Custom attribute to specify decimal precision and scale
     public class DecimalPrecisionAttribute : ValidationAttribute
@@ -22,6 +22,7 @@ namespace Web.Models.Business_Entities
             }
 
             decimal decimalValue;
+
             if (decimal.TryParse(value.ToString(), out decimalValue))
             {
                 // Check precision and scale

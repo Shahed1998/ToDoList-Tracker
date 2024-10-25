@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Web.Models.Business_Entities;
 
 namespace Web.Controllers
 {
@@ -17,7 +18,17 @@ namespace Web.Controllers
 
         public IActionResult Register()
         {
-            return View();
+            return View(new RegisterViewModel());
+        }
+
+        [HttpPost]
+        public IActionResult Register(RegisterViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            return RedirectToAction("Login");
         }
     }
 }

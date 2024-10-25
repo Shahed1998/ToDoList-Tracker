@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Web.Models.Business_Entities;
+using Web.Models.CustomValidationAttribute;
 
 namespace Web.Models.General_Entities
 {

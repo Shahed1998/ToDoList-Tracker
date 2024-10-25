@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.Xml;
 using Web.Models.General_Entities;
 
 namespace web.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext
     {
         private readonly IConfiguration _configuration;
 
@@ -13,7 +15,6 @@ namespace web.Data
             _configuration = configuration;
         }
 
-        public DbSet<Tracker> Trackers { get; set; }
-        public DbSet<AchievementResult> AchievementResults { get; set; }
+
     }
 }

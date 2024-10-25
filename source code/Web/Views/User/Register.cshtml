@@ -1,35 +1,43 @@
-﻿@{
+﻿@using Web.Models.Business_Entities
+
+@model RegisterViewModel
+
+@{
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
 <div class="login-form p-5 mx-auto d-flex align-items-center justify-content-center">
-    <form class="shadow-lg w-100 p-5">
+    <form method="post" asp-action="Register" asp-controller="User" class="shadow-lg w-100 p-5">
         <h3 class="text-center mb-5">Sign up</h3>
         <div class="mb-3">
-            <label for="username" class="form-label">Username <span class="asterisk">*</span></label>
-            <input type="text" class="form-control" id="username">
+            <label asp-for="Username" class="form-label"></label>
+            <input asp-for="Username" class="form-control" />
+            <span asp-validation-for="Username" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label for="email" class="form-label">Email <span class="asterisk">*</span></label>
-            <input type="text" class="form-control" id="email">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label for="password" class="form-label">Password <span class="asterisk">*</span></label>
+            <label asp-for="Password" class="form-label"></label>
             <div class="input-group">
-                <input type="password" class="form-control password-field" id="password">
+                <input asp-for="Password" class="form-control" />
                 <span class="input-group-text toggle-password">
                     <i class="fa-regular fa-eye-slash" id="password-icon"></i>
                 </span>
             </div>
+            <span asp-validation-for="Password" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label for="confirm-password" class="form-label">Confirm Password <span class="asterisk">*</span></label>
+            <label asp-for="ConfirmPassword" class="form-label"></label>
             <div class="input-group">
-                <input type="password" class="form-control password-field" id="confirm-password">
+                <input asp-for="ConfirmPassword" class="form-control" />
                 <span class="input-group-text toggle-confirm-password">
                     <i class="fa-regular fa-eye-slash" id="confirm-password-icon"></i>
                 </span>
             </div>
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary mb-3 w-100">Sign Up</button>
         <div class="mb-3">
@@ -41,11 +49,11 @@
 @section Scripts {
     <script>
         $('.toggle-password').on('click', function () {
-            PasswordToggle('#password', '#password-icon');
+            PasswordToggle('#Password', '#password-icon');
         });
 
         $('.toggle-confirm-password').on('click', function () {
-            PasswordToggle('#confirm-password', '#confirm-password-icon');
+            PasswordToggle('#ConfirmPassword', '#confirm-password-icon');
         })
 
 

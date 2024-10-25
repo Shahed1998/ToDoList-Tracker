@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 using web.Data;
+using Web.Data;
 using Web.Helpers;
 using Web.Models.Business_Entities;
 using Web.Models.General_Entities;
@@ -11,24 +12,24 @@ namespace Web.Repositories.Implementations
 {
     public class TrackerRepository : ITrackerRepository
     {
-        public readonly DataContext _dataContext;
+        public readonly TrackerContext _trackerContext;
 
-        public TrackerRepository(DataContext dataContext)
+        public TrackerRepository(TrackerContext trackerContext)
         {
-            _dataContext = dataContext;
+            _trackerContext = trackerContext;
         }
 
         public async Task<bool> Add(Tracker model)
         {
-            return await _dataContext.Database.ExecuteSqlAsync($"usp_InsertIntoTrackerTable @completed = {model.Completed}, @planned = {model.Planned}") > 0;
+            return await _trackerContext.Database.ExecuteSqlAsync($"usp_InsertIntoTrackerTable @completed = {model.Completed}, @planned = {model.Planned}") > 0;
         }
 
         public async Task<(Pager<Tracker>, decimal?)> GetAll(int pageNumber = 1, int pageSize = 10)
         {
 
-            AchievementResult? achievement = await _dataContext.AchievementResults.FirstOrDefaultAsync();
+            AchievementResult? achievement = await _trackerContext.AchievementResults.FirstOrDefaultAsync();
 
-            var pagedList = await Pager<Tracker>.CreateAsync(_dataContext.Trackers.OrderByDescending(x => x.Date), pageNumber, pageSize);
+            var pagedList = await Pager<Tracker>.CreateAsync(_trackerContext.Trackers.OrderByDescending(x => x.Date), pageNumber, pageSize);
 
             return (pagedList, (achievement == null ? Decimal.Zero : achievement.Result));
 
@@ -39,13 +40,13 @@ namespace Web.Repositories.Implementations
             int rowsUpdated = 0;
             try
             {
-                Tracker? tracker = await _dataContext.Trackers.FindAsync(Id);
+                Tracker? tracker = await _trackerContext.Trackers.FindAsync(Id);
 
                 if(tracker != null)
                 {
                     var sql = $"DELETE FROM Tracker WHERE Id=@Id";
                     var parameter = new SqlParameter("@Id", Id);
-                    rowsUpdated = await _dataContext.Database.ExecuteSqlRawAsync(sql, parameter);
+                    rowsUpdated = await _trackerContext.Database.ExecuteSqlRawAsync(sql, parameter);
 
                     var trackerInfo = "Successfully Deleted Tracker {"+
                         $"Id: {tracker.Id}, Completed: {tracker.Completed}, Planned: {tracker.Planned}," +
@@ -70,7 +71,7 @@ namespace Web.Repositories.Implementations
             var rowsUpdate = 0;
             try
             {
-                var tracker = await _dataContext.Trackers.FindAsync(model.Id);
+                var tracker = await _trackerContext.Trackers.FindAsync(model.Id);
 
                 if (tracker != null) 
                 {
@@ -86,7 +87,7 @@ namespace Web.Repositories.Implementations
                     parameters.Add(new SqlParameter("@Date", model.Date));
                     parameters.Add(new SqlParameter("@Id", model.Id));
 
-                    rowsUpdate = await _dataContext.Database.ExecuteSqlRawAsync(sql, parameters);
+                    rowsUpdate = await _trackerContext.Database.ExecuteSqlRawAsync(sql, parameters);
 
                     var trackerInfo = "Successfully Updated Tracker from {" +
                         $"Id: {tracker.Id}, Completed: {tracker.Completed}, Planned: {tracker.Planned}," +
@@ -111,7 +112,7 @@ namespace Web.Repositories.Implementations
 
         public async Task<Tracker?> GetById(int id)
         {
-            return await _dataContext.Trackers.FindAsync(id);
+            return await _trackerContext.Trackers.FindAsync(id);
         }
 
         public async Task<bool> DeleteAll()
@@ -120,7 +121,7 @@ namespace Web.Repositories.Implementations
             try
             {
                 var sql = "EXEC usp_ClearAllTrackers";
-                int rowsUpdated = await _dataContext.Database.ExecuteSqlRawAsync(sql);
+                int rowsUpdated = await _trackerContext.Database.ExecuteSqlRawAsync(sql);
                 if (rowsUpdated > 0)
                 {
                     success = true;

@@ -1,21 +1,22 @@
 ﻿using web.Data;
+using Web.Data;
 using Web.Repositories.Interfaces;
 
 namespace Web.Repositories.Implementations
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public readonly DataContext _dataContext;
-        public UnitOfWork(DataContext dataContext)
+        public readonly TrackerContext _trackerContext;
+        public UnitOfWork(TrackerContext trackerContext)
         {
-            _dataContext = dataContext;
+            _trackerContext = trackerContext;
         }
 
-        public ITrackerRepository TrackerRepository => new TrackerRepository(_dataContext);
+        public ITrackerRepository TrackerRepository => new TrackerRepository(_trackerContext);
 
         public async Task<bool> SaveAsync()
         {
-            return await _dataContext.SaveChangesAsync() > 0;
+            return await _trackerContext.SaveChangesAsync() > 0;
         }
     }
 }
