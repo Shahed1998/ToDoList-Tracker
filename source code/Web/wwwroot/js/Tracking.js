@@ -83,5 +83,28 @@ $(document).on("submit", "#registerForm", function (e) {
     }
 });
 
+// add asterisk to all required fields
+$('input').each(function () {
+    var req = $(this).attr('data-val-required');
+    if (req != undefined) {
+        var label = $('label[for="' + $(this).attr('Id') + '"]');
+        $(label).addClass('required');
+    }
+})
+
+// password view
+function PasswordToggle(fieldId, passwordIconId) {
+    var icon = $(passwordIconId);
+
+    if ($(fieldId).attr('type') == "password") {
+        $(fieldId).attr('type', 'text');
+        icon.removeClass('fa-regular fa-eye-slash').addClass('fa-regular fa-eye');
+    }
+    else {
+        $(fieldId).attr('type', 'password');
+        icon.removeClass('fa-regular fa-eye').addClass('fa-regular fa-eye-slash');
+    }
+}
+
 
 

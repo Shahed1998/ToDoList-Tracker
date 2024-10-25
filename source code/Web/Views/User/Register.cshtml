@@ -6,6 +6,7 @@
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
+
 <div class="login-form p-5 mx-auto d-flex align-items-center justify-content-center">
     <form method="post" asp-action="Register" asp-controller="User" class="shadow-lg w-100 p-5">
         <h3 class="text-center mb-5">Sign up</h3>
@@ -55,20 +56,5 @@
         $('.toggle-confirm-password').on('click', function () {
             PasswordToggle('#ConfirmPassword', '#confirm-password-icon');
         })
-
-
-        function PasswordToggle(fieldId, passwordIconId) {
-            var icon = $(passwordIconId);
-
-            if ($(fieldId).attr('type') == "password") {
-                $(fieldId).attr('type', 'text');
-                icon.removeClass('fa-regular fa-eye-slash').addClass('fa-regular fa-eye');
-            }
-            else {
-                $(fieldId).attr('type', 'password');
-                icon.removeClass('fa-regular fa-eye').addClass('fa-regular fa-eye-slash');
-            }
-        }
-
     </script>
 }

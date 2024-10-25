@@ -11,14 +11,26 @@ namespace Web.Controllers
 
         }
 
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
+        [HttpPost]
+        public IActionResult Login(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            return RedirectToAction("Login");
+        }
+
+        [HttpGet]
         public IActionResult Register()
         {
-            return View(new RegisterViewModel());
+            return View();
         }
 
         [HttpPost]

@@ -6,7 +6,7 @@
     font-style: normal;
 }
 
-.asterisk{
+.required::after {
+    content: " *";
     color: red;
 }
-
