@@ -36,8 +36,11 @@ builder.Services.AddDbContext<TrackerContext>(opt => opt.UseSqlServer(connection
 #endregion
 
 #region Identity register
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<DataContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.Password.RequiredLength = 8;
+})
+.AddEntityFrameworkStores<DataContext>();
 #endregion
 
 #region Unit of work
@@ -47,6 +50,8 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 #region Services
 builder.Services.AddScoped<ITrackerService, TrackerService>();
 #endregion
+
+
 
 var app = builder.Build();
 

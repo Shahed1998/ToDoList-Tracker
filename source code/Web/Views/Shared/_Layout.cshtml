@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject SignInManager<IdentityUser> signInManager;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -13,12 +15,29 @@
 </head>
 <body>
     <header class="p-2 mb-5 shadow">
-        <nav class="navbar">
+        <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="" style="color: black;">
                     <img src="~/images/checklist.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
                     To Do List Tracker
                 </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav ms-auto">
+                        @if (signInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item ">
+                                <form method="post" asp-action="Logout" asp-controller="User">
+                                    <button type="submit" class="nav-link btn btn-link">
+                                        Logout @User.Identity?.Name
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                    </ul>
+                </div>
             </div>
         </nav>
     </header>
@@ -32,8 +51,8 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/bootstrap-datepicker-1.10.0/dist/js/bootstrap-datepicker.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    
-    
+
+
     <script src="https://kit.fontawesome.com/6bcc330b11.js" crossorigin="anonymous"></script>
     <script src="~/js/tracking.js" asp-append-version="true"></script>
 
