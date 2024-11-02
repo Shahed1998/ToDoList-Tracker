@@ -51,7 +51,10 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ITrackerService, TrackerService>();
 #endregion
 
-
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/User/Login";
+});
 
 var app = builder.Build();
 

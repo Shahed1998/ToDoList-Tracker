@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Web.Helpers;
 using Web.Models.Business_Entities;
 
@@ -16,19 +17,52 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string? ReturnUrl=null)
         {
-            return View(new LoginViewModel());
+            var model = new LoginViewModel();
+
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                if(!ReturnUrl.IsNullOrEmpty() && !Url.IsLocalUrl(ReturnUrl))
+                {
+                    Redirect(ReturnUrl!);
+                }
+                else
+                {
+                    RedirectToAction("Index", "Tracking");
+                }
+            }
+
+            return View(model);
         }
 
         [HttpPost]
-        public IActionResult Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return View(model);
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+                var result = await _signInManager.PasswordSignInAsync(model.Username!, model.Password!,
+                    model.RememberMe, false);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Tracking");
+                }
+
+                ModelState.AddModelError("LoginError", "Invalid login attempt");
             }
-            return RedirectToAction("Login");
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("LoginError", "An internal server error occured");
+                HelperSerilog.LogError(ex.Message, ex);
+            }
+
+            return View(model);
+
         }
 
         [HttpPost]
@@ -66,9 +100,9 @@ namespace Web.Controllers
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("RegistrationError", error.Description);
-                } 
+                }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ModelState.AddModelError("RegistrationError", "An error occured during signing up");
                 HelperSerilog.LogError(ex.Message, ex);

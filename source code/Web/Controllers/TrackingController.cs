@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Web.Models.Business_Entities;
 using Web.Services.Interfaces;
 
 namespace Web.Controllers
 {
+    [Authorize]
     public class TrackingController : BaseController
     {
         private readonly ITrackerService _trackerService;

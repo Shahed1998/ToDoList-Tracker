@@ -9,11 +9,23 @@
 <div class="login-form p-5 mx-auto d-flex align-items-center justify-content-center">
     <form method="post" asp-action="Login" asp-controller="User" class="shadow-lg w-100 p-5">
         <h3 class="text-center mb-3">Login</h3>
-        <div class="alert alert-info mb-5" role="alert">
-            <div>
-                Most impossible goals can be met simply by breaking them down into bite-size chunks, writing them down, believing them and going full speed ahead as if they were routine.' — Don Lancaster
+
+        @if (ViewData.ModelState.ContainsKey("LoginError"))
+        {
+            <div class="alert alert-info mb-3" role="alert">
+                <div asp-validation-summary="All" class="text-danger"></div>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="alert alert-info mb-3" role="alert">
+                <div>
+                    Most impossible goals can be met simply by breaking them down into bite-size chunks,
+                    writing them down, believing them and going full speed ahead as if they were routine.
+                    ' — Don Lancaster
+                </div>
+            </div>
+        }
 
         <div class="mb-3">
             <label asp-for="Username" class="form-label"></label>
