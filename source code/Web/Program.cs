@@ -5,7 +5,6 @@ using Web.Repositories.Interfaces;
 using Web.Services.Implementations;
 using Web.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using System;
 using Web.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +38,7 @@ builder.Services.AddDbContext<TrackerContext>(opt => opt.UseSqlServer(connection
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     options.Password.RequiredLength = 8;
+    options.User.RequireUniqueEmail = true;
 })
 .AddEntityFrameworkStores<DataContext>();
 #endregion
