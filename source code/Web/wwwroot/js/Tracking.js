@@ -91,6 +91,12 @@
             $(label).addClass('required');
         }
     })
+
+    // remove asterisk from the label of all the checkboxes 
+    $('input[type="checkbox"]').each(function () {
+        $('label[for="' + $(this).attr("id") + '"]').removeClass('required');
+    })
+
 });
 
 // password view
