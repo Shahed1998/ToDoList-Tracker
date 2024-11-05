@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Web.Models.Business_Entities;
 using Web.Services.Interfaces;
 
@@ -9,10 +11,12 @@ namespace Web.Controllers
     public class TrackingController : BaseController
     {
         private readonly ITrackerService _trackerService;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public TrackingController(ITrackerService trackerService)
+        public TrackingController(ITrackerService trackerService, SignInManager<IdentityUser> signInManager)
         {
             _trackerService = trackerService;
+            _signInManager = signInManager;
         }
 
         public async Task<IActionResult> Index(bool? IsSaved, int pageNumber=1, int pageSize=5, int count = 0, bool prevPage = false) 
@@ -29,8 +33,15 @@ namespace Web.Controllers
                 count = 0;
             }
 
-           
-            var trackingList = await _trackerService.GetAllTrackers(pageNumber, pageSize);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Login", "User");
+            }
+
+            var trackingList = await _trackerService.GetAllTrackers(pageNumber, pageSize, userId);
 
             CompositeTrackerViewModel model = new CompositeTrackerViewModel();
 
@@ -50,6 +61,16 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(TrackerViewModel model)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if(userId == null)
+            {
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Login", "User");
+            }
+
+            model.UserId = userId;
+
             bool ts = await _trackerService.AddTracker(model);
 
             return RedirectToAction("Index", new { IsSaved = ts });
@@ -91,7 +112,15 @@ namespace Web.Controllers
 
         public async Task<IActionResult> DeleteAll()
         {
-            var isSuccessfullyDeleted = await _trackerService.DeleteAll();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Login", "User");
+            }
+
+            var isSuccessfullyDeleted = await _trackerService.DeleteAll(userId);
 
             return RedirectToAction("Index", new { IsSaved = isSuccessfullyDeleted });
         }

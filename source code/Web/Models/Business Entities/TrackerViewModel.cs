@@ -23,6 +23,8 @@ namespace Web.Models.Business_Entities
 
         public DateTime? Date { get; set; }
 
+        public string? UserId { get; set; }
+
         #region Mapping
         public static explicit operator TrackerViewModel(Tracker t) => new TrackerViewModel()
         {
@@ -31,6 +33,7 @@ namespace Web.Models.Business_Entities
             Planned = t.Planned,
             Percentage = t.Percentage,
             Date = t.Date,
+            UserId = t.UserId
         };
 
         public static explicit operator Tracker(TrackerViewModel t) => new Tracker()
@@ -39,6 +42,7 @@ namespace Web.Models.Business_Entities
             Planned = t.Planned,
             Date = t.Date,
             Id = t.Id,
+            UserId = t.UserId
         };
         #endregion
     }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 using Web.Models.Business_Entities;
 using Web.Models.CustomValidationAttribute;
 
@@ -24,5 +25,8 @@ namespace Web.Models.General_Entities
         public decimal? Percentage { get; set; }
 
         public DateTime? Date { get; set; }
+
+        [Required]
+        public string? UserId { get; set; }
     }
 }

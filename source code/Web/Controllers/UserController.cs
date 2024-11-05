@@ -23,13 +23,13 @@ namespace Web.Controllers
 
             if (User.Identity?.IsAuthenticated == true)
             {
-                if(!ReturnUrl.IsNullOrEmpty() && !Url.IsLocalUrl(ReturnUrl))
+                if(!ReturnUrl.IsNullOrEmpty() && Url.IsLocalUrl(ReturnUrl))
                 {
-                    Redirect(ReturnUrl!);
+                    return Redirect(ReturnUrl!);
                 }
                 else
                 {
-                    RedirectToAction("Index", "Tracking");
+                    return RedirectToAction("Index", "Tracking");
                 }
             }
 

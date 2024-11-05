@@ -19,9 +19,9 @@ namespace Web.Services.Implementations
             return await _unitOfWork.TrackerRepository.Add((Tracker)viewModel);
         }
 
-        public async Task<(Pager<TrackerViewModel>, decimal?)> GetAllTrackers(int pageNumber = 1, int pageSize = 10)
+        public async Task<(Pager<TrackerViewModel>, decimal?)> GetAllTrackers(int pageNumber = 1, int pageSize = 10, string? userId = null)
         {
-            var result = await _unitOfWork.TrackerRepository.GetAll(pageNumber, pageSize);
+            var result = await _unitOfWork.TrackerRepository.GetAll(pageNumber, pageSize, userId);
 
             var lst = result.Item1.Select(tracker => (TrackerViewModel)tracker).ToList();
 
@@ -47,9 +47,9 @@ namespace Web.Services.Implementations
             return (TrackerViewModel)tracker;
         }
 
-        public async Task<bool> DeleteAll()
+        public async Task<bool> DeleteAll(string? userId=null)
         {
-            return await _unitOfWork.TrackerRepository.DeleteAll();
+            return await _unitOfWork.TrackerRepository.DeleteAll(userId);
         }
     }
 }

@@ -21,15 +21,25 @@ namespace Web.Repositories.Implementations
 
         public async Task<bool> Add(Tracker model)
         {
-            return await _trackerContext.Database.ExecuteSqlAsync($"usp_InsertIntoTrackerTable @completed = {model.Completed}, @planned = {model.Planned}") > 0;
+            return await _trackerContext.Database.ExecuteSqlAsync($"usp_InsertIntoTrackerTable @completed = {model.Completed}, @planned = {model.Planned}, @userId = {model.UserId}") > 0;
         }
 
-        public async Task<(Pager<Tracker>, decimal?)> GetAll(int pageNumber = 1, int pageSize = 10)
+        public async Task<(Pager<Tracker>, decimal?)> GetAll(int pageNumber = 1, int pageSize = 10, string? userId = null)
         {
+            AchievementResult? achievement;
 
-            AchievementResult? achievement = await _trackerContext.AchievementResults.FirstOrDefaultAsync();
+            if (userId != null)
+            {
+                achievement = await _trackerContext.AchievementResults
+                    .Where(x => x.UserId == userId).FirstOrDefaultAsync();
+            }
+            else
+            {
+                achievement = await _trackerContext.AchievementResults.FirstOrDefaultAsync();
+            }
 
-            var pagedList = await Pager<Tracker>.CreateAsync(_trackerContext.Trackers.OrderByDescending(x => x.Date), pageNumber, pageSize);
+            var pagedList = await Pager<Tracker>.CreateAsync(_trackerContext.Trackers
+                .Where(x => x.UserId == userId).OrderByDescending(x => x.Date), pageNumber, pageSize);
 
             return (pagedList, (achievement == null ? Decimal.Zero : achievement.Result));
 
@@ -115,17 +125,21 @@ namespace Web.Repositories.Implementations
             return await _trackerContext.Trackers.FindAsync(id);
         }
 
-        public async Task<bool> DeleteAll()
+        public async Task<bool> DeleteAll(string? userId = null)
         {
             bool success = false;
             try
             {
-                var sql = "EXEC usp_ClearAllTrackers";
+                var sql = $"EXEC usp_ClearAllTrackers @userId='{userId}'";
                 int rowsUpdated = await _trackerContext.Database.ExecuteSqlRawAsync(sql);
                 if (rowsUpdated > 0)
                 {
                     success = true;
-                    HelperSerilog.LogInformation("Deleted all data on date: " + DateTime.Now.ToString("MMM dd, yyyy hh:mm tt"));
+
+                    var sql2 = $"SELECT UserName FROM AspNetUsers WHERE Id='{userId}'";
+                    var username = await _trackerContext.Database.ExecuteSqlRawAsync(sql2);
+
+                    HelperSerilog.LogInformation("Deleted all data on date: " + DateTime.Now.ToString("MMM dd, yyyy hh:mm tt") + " of Username: "+ username);
                 }
             }
             catch (Exception ex)

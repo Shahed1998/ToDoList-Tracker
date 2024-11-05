@@ -1,0 +1,21 @@
+IF OBJECT_ID(N'Tracker', 'U') IS NOT NULL
+BEGIN
+	TRUNCATE TABLE Tracker
+END
+
+IF OBJECT_ID(N'Achievement', 'U') IS NOT NULL
+BEGIN
+	TRUNCATE TABLE Achievement
+	IF COL_LENGTH('Achievement', 'UserId') IS NULL
+	BEGIN
+		ALTER TABLE Achievement
+		ADD UserId NVARCHAR(450) NOT NULL
+	END
+END
+
+IF COL_LENGTH('Achievement', 'UserId') IS NOT NULL
+BEGIN
+	ALTER TABLE Achievement
+	ADD CONSTRAINT FK_Achievement_AspNetUsers_UserId
+	FOREIGN KEY (UserId) REFERENCES AspNetUsers(Id);
+END
