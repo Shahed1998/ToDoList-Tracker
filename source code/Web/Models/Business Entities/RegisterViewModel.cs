@@ -1,13 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Web.Models.Business_Entities
 {
     public class RegisterViewModel
     {
         [Required]
+        [Remote(action: "IsUsernameInUse", controller: "User")]
         public string? Username { get; set; }
 
         [Required]
+        [Remote(action: "IsEmailInUse", controller: "User")]
         public string? Email { get; set; }
 
         [Required]

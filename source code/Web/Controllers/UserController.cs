@@ -16,14 +16,47 @@ namespace Web.Controllers
             _userManager = userManager;
         }
 
+        #region Remote validation
+        [AcceptVerbs("GET", "POST")]
+        public async Task<IActionResult> IsUsernameInUse(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+
+            if(user != null)
+            {
+                return Json($"Username {username} is already in use");
+            }
+            else
+            {
+                return Json(true);
+            }
+        }
+
+        [AcceptVerbs("GET", "POST")]
+        public async Task<IActionResult> IsEmailInUse(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user != null)
+            {
+                return Json($"Email {email} is already in use");
+            }
+            else
+            {
+                return Json(true);
+            }
+        }
+
+        #endregion
+
         [HttpGet]
-        public IActionResult Login(string? ReturnUrl=null)
+        public IActionResult Login(string? ReturnUrl = null)
         {
             var model = new LoginViewModel();
 
             if (User.Identity?.IsAuthenticated == true)
             {
-                if(!ReturnUrl.IsNullOrEmpty() && Url.IsLocalUrl(ReturnUrl))
+                if (!ReturnUrl.IsNullOrEmpty() && Url.IsLocalUrl(ReturnUrl))
                 {
                     return Redirect(ReturnUrl!);
                 }
@@ -111,4 +144,6 @@ namespace Web.Controllers
             return View(model);
         }
     }
+
+
 }
