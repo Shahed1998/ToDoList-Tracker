@@ -19,7 +19,8 @@ namespace Web.Controllers
             _signInManager = signInManager;
         }
 
-        public async Task<IActionResult> Index(bool? IsSaved, int pageNumber=1, int pageSize=5, int count = 0, bool prevPage = false) 
+        public async Task<IActionResult> Index(bool? IsSaved, int pageNumber = 1, int pageSize = 5,
+            int count = 0, bool prevPage = false, string message = "")
         {
 
             if (prevPage)
@@ -27,7 +28,7 @@ namespace Web.Controllers
                 count = count - pageSize - 1;
             }
 
-            if (pageNumber <= 1) 
+            if (pageNumber <= 1)
             {
                 pageNumber = 1;
                 count = 0;
@@ -54,20 +55,38 @@ namespace Web.Controllers
             ViewBag.Count = count;
             ViewBag.PageNumber = pageNumber;
             ViewBag.PageSize = pageSize;
+            ViewBag.Message = message;
 
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Index(TrackerViewModel model)
+        [HttpGet]
+        public IActionResult Create()
         {
+            return PartialView("_Create", new CreateTrackerViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateTrackerViewModel createModel)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Index", new { IsSaved = false, message = "Failed to create" });
+            }
+
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if(userId == null)
+            if (userId == null)
             {
                 await _signInManager.SignOutAsync();
                 return RedirectToAction("Login", "User");
             }
+
+            var model = new TrackerViewModel();
+
+            model.Completed = createModel.Completed;
+            model.Planned = createModel.Planned;
 
             model.UserId = userId;
 
@@ -84,24 +103,24 @@ namespace Web.Controllers
             return RedirectToAction("Index", new { IsSaved = isSaved });
         }
 
-        [HttpGet("Edit")]
-        public async Task<IActionResult> GetEdit(int Id)
+        [HttpGet]
+        public async Task<IActionResult> Edit(int Id)
         {
             var model = await _trackerService.GetTrackerById(Id);
             return PartialView("Edit", model);
         }
 
-        [HttpPost("Edit")]
-        public async Task<IActionResult> PostEdit(TrackerViewModel model)
+        [HttpPost]
+        public async Task<IActionResult> Edit(TrackerViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return PartialView("Edit", model);
+                return RedirectToAction("Index", new { IsSaved = false, message="Failed to edit" });
             }
 
             var isUpdated = await _trackerService.Update(model);
 
-            if(!isUpdated) 
+            if (!isUpdated)
             {
                 ModelState.AddModelError("isSaved", "Unable to update");
                 return PartialView("Edit", model);

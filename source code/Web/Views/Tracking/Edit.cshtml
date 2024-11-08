@@ -1,25 +1,25 @@
 ﻿@model Web.Models.Business_Entities.TrackerViewModel
 
-<form id="registerForm" method="post" asp-action="PostEdit">
+<form id="registerForm" method="post" asp-action="Edit">
 
     <input type="hidden" asp-for="Id" />
     <input type="hidden" asp-for="Percentage" />
 
     <div class="modal-body">
         <div class="form-group">
-            <label asp-for="Completed"></label>
+            <label asp-for="Completed" class="required"></label>
             <input asp-for="Completed" class="form-control" />
             <span asp-validation-for="Completed" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="Planned"></label>
+            <label asp-for="Planned" class="required"></label>
             <input asp-for="Planned" class="form-control" />
             <span asp-validation-for="Planned" class="text-danger .planned-validation-error"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="Date"></label>
+            <label asp-for="Date" class="required"></label>
             <div class="input-group mb-3">
                 <input asp-for="Date" class="form-control" id="dateInput" type="text" readonly="true" value=""/>
                 <span class="input-group-text bg-light" id="dtp">

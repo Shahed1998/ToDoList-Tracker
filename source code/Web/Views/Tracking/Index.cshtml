@@ -7,6 +7,23 @@
     decimal achievements = ViewBag.Achievements;
     int pageNumber = ViewBag.PageNumber;
     int pageSize = ViewBag.PageSize;
+    string message;
+
+    if (ViewBag.Message == "")
+    {
+        if (isSaved == true)
+        {
+            message = "Success";
+        }
+        else
+        {
+            message = "Failed";
+        }
+    }
+    else
+    {
+        message = ViewBag.Message;
+    }
 }
 
 
@@ -23,7 +40,7 @@
 
 
 @* Modal *@
-<partial name="Partials/_Modal.cshtml"/>
+<partial name="Partials/_Modal.cshtml" />
 
 <div class="panel panel-default">
     <div class="panel-header">
@@ -33,7 +50,7 @@
                 <button type="button"
                         class="btn btn-primary"
                         id="createModalButton"
-                        data-url="@Url.Action("LoadPartialView")"
+                        data-url="@Url.Action("Create", "Tracking")"
                         data-bs-toggle="tooltip"
                         data-bs-placement="bottom"
                         title="Create">
@@ -75,7 +92,7 @@
                         {
                             count += 1;
                             ViewData["count"] = count;
-                                                <partial name="Partials/_TrackingList.cshtml" model="tracker" view-data="ViewData"/>
+                            <partial name="Partials/_TrackingList.cshtml" model="tracker" view-data="ViewData" />
                         }
                     }
                 </tbody>
@@ -105,37 +122,37 @@
             var endPageItemCount = (pagerModel.TotalPages - 1) * pagerModel.PageSize;
             var prevPageTotalCount = pagerModel.PageIndex * pagerModel.PageSize - pagerModel.PageSize + 1;
 
-                                <a asp-action="Index"
-                                   asp-route-pageNumber="@(Model.Pager.PageIndex - 1)"
-                                   asp-route-count="@prevPageTotalCount"
-                                   asp-route-prevPage="true"
-                                   class="btn btn-outline-secondary @prevDisabled">Previous</a>
+            <a asp-action="Index"
+               asp-route-pageNumber="@(Model.Pager.PageIndex - 1)"
+               asp-route-count="@prevPageTotalCount"
+               asp-route-prevPage="true"
+               class="btn btn-outline-secondary @prevDisabled">Previous</a>
 
             if (ViewBag.PageNumber != 1)
             {
-                                    <a asp-action="Index"
-                                       asp-route-pageNumber="1"
-                                       asp-route-prevPage="true"
-                                       class="btn btn-outline-secondary @prevDisabled">Start</a>
+                <a asp-action="Index"
+                   asp-route-pageNumber="1"
+                   asp-route-prevPage="true"
+                   class="btn btn-outline-secondary @prevDisabled">Start</a>
             }
 
             if (endPage > 1)
             {
                 if (!string.Equals(nextDisabled, "disabled", StringComparison.OrdinalIgnoreCase))
                 {
-                                        <a asp-action="Index"
-                                           asp-route-pageNumber="@endPage"
-                                           asp-route-count="@endPageItemCount"
-                                           asp-route-prevPage="false"
-                                           class="btn btn-outline-secondary @nextDisabled">End</a>
+                    <a asp-action="Index"
+                       asp-route-pageNumber="@endPage"
+                       asp-route-count="@endPageItemCount"
+                       asp-route-prevPage="false"
+                       class="btn btn-outline-secondary @nextDisabled">End</a>
                 }
             }
 
-                                <a asp-action="Index"
-                                   asp-route-pageNumber="@(Model.Pager.PageIndex + 1)"
-                                   asp-route-count="@count"
-                                   asp-route-prevPage="false"
-                                   class="btn btn-outline-secondary @nextDisabled">Next</a>
+            <a asp-action="Index"
+               asp-route-pageNumber="@(Model.Pager.PageIndex + 1)"
+               asp-route-count="@count"
+               asp-route-prevPage="false"
+               class="btn btn-outline-secondary @nextDisabled">Next</a>
         }
 
 
@@ -143,7 +160,7 @@
 </div>
 
 @section Scripts {
-   <script>
+    <script>
         $(document).ready(function () {
             var toastr = $('#toast');
             var toast = new bootstrap.Toast(toastr)
@@ -152,19 +169,15 @@
 
             if (isSaved == "true") {
                 $("#toast").removeClass("bg-danger").addClass("bg-success");
-                $('.toast-body').text('Successful');
+                $('.toast-body').text("@message");
                 toast.show();
             }
             else if (isSaved == "false") {
                 $("#toast").removeClass("bg-success").addClass("bg-danger");
-                $('.toast-body').text('Failed');
+                $('.toast-body').text("@message");
                 toast.show();
             }
-
         });
-
-       
-
-   </script>
+    </script>
 }
 

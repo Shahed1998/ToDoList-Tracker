@@ -1,13 +1,14 @@
 ﻿$(document).ready(function () {
     $("#createModalButton").click(function (e) {
-        var viewNumber = 1;
+
         $('#modalLabel').text("Create");
 
         $.ajax({
             type: "GET",
-            url: $(this).data('url') + '?viewNumber=' + viewNumber,
+            url: $(this).data('url'),
             success: function (response) {
                 $('#loadModalData').html(response);
+                $.validator.unobtrusive.parse('#registerForm');
             },
             error: function () {
                 $('#loadModalData').html("Error Generating View");
@@ -21,13 +22,14 @@
     $('.Edit').click(function (e) {
         e.preventDefault();
         $('#modalLabel').html("Edit");
-        $('#loadModalData').html("Loading data while editing");
+        $('#loadModalData').html("Loading");
 
         $.ajax({
             type: "GET",
             url: $(this).attr('href'),
             success: function (response) {
                 $('#loadModalData').html(response);
+                $.validator.unobtrusive.parse('#registerForm');
             },
             error: function () {
                 $('#loadModalData').html("Error Generating View");
@@ -76,12 +78,12 @@
         $('#exampleModal').modal("hide");
     });
 
-    $(document).on("submit", "#registerForm", function (e) {
-        if ($("#Completed").val().length < 1 || $("#Planned").val().length < 1) {
-            alert("Both field are required");
-            e.preventDefault();
-        }
-    });
+    //$(document).on("submit", "#registerForm", function (e) {
+    //    if ($("#Completed").val().length < 1 || $("#Planned").val().length < 1) {
+    //        alert("Both field are required");
+    //        e.preventDefault();
+    //    }
+    //});
 
     // add asterisk to all required fields
     $('input').each(function () {
