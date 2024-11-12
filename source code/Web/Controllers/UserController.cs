@@ -3,14 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Web.Helpers;
 using Web.Models.Business_Entities;
+using Web.Models.General_Entities;
 
 namespace Web.Controllers
 {
     public class UserController : BaseController
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
-        public UserController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        public UserController(SignInManager<User> signInManager, UserManager<User> userManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -121,7 +122,7 @@ namespace Web.Controllers
                     return View(model);
                 }
 
-                var user = new IdentityUser { UserName = model.Username, Email = model.Email };
+                var user = new User { UserName = model.Username, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password!);
 
                 if (result.Succeeded)

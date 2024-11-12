@@ -6,6 +6,7 @@ using Web.Services.Implementations;
 using Web.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Web.Data;
+using Web.Models.General_Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,7 +36,7 @@ builder.Services.AddDbContext<TrackerContext>(opt => opt.UseSqlServer(connection
 #endregion
 
 #region Identity register
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     options.Password.RequiredLength = 8;
     options.User.RequireUniqueEmail = true;

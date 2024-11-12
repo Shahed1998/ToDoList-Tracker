@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Web.Models.Business_Entities;
+using Web.Models.General_Entities;
 using Web.Services.Interfaces;
 
 namespace Web.Controllers
@@ -11,9 +12,9 @@ namespace Web.Controllers
     public class TrackingController : BaseController
     {
         private readonly ITrackerService _trackerService;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public TrackingController(ITrackerService trackerService, SignInManager<IdentityUser> signInManager)
+        public TrackingController(ITrackerService trackerService, SignInManager<User> signInManager)
         {
             _trackerService = trackerService;
             _signInManager = signInManager;

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Web.Models.CustomValidationAttribute;
+using Web.Utilities;
 
 namespace Web.Models.Business_Entities
 {

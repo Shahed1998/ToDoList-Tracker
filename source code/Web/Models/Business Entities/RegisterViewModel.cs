@@ -10,6 +10,7 @@ namespace Web.Models.Business_Entities
         public string? Username { get; set; }
 
         [Required]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         [Remote(action: "IsEmailInUse", controller: "User")]
         public string? Email { get; set; }
 

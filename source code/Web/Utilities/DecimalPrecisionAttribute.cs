@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Web.Models.CustomValidationAttribute
+namespace Web.Utilities
 {
     // Custom attribute to specify decimal precision and scale
     public class DecimalPrecisionAttribute : ValidationAttribute
