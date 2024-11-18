@@ -7,6 +7,7 @@ using Web.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Web.Data;
 using Web.Models.General_Entities;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,11 @@ builder.Services.AddScoped<ITrackerService, TrackerService>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/User/Login";
+});
+
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add(new AuthorizeFilter());
 });
 
 var app = builder.Build();

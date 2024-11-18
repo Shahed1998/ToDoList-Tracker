@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -11,10 +12,15 @@ namespace Web.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        public UserController(SignInManager<User> signInManager, UserManager<User> userManager)
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public UserController(
+            SignInManager<User> signInManager,
+            UserManager<User> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         #region Remote validation
@@ -51,6 +57,7 @@ namespace Web.Controllers
         #endregion
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login(string? ReturnUrl = null)
         {
             var model = new LoginViewModel();
@@ -67,10 +74,12 @@ namespace Web.Controllers
                 }
             }
 
+            model.ReturnUrl = ReturnUrl;
             return View(model);
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             try
@@ -84,6 +93,10 @@ namespace Web.Controllers
 
                 if (result.Succeeded)
                 {
+                    if (!model.ReturnUrl.IsNullOrEmpty() && Url.IsLocalUrl(model.ReturnUrl))
+                    {
+                        return Redirect(model.ReturnUrl!);
+                    }
                     return RedirectToAction("Index", "Tracking");
                 }
 
@@ -107,12 +120,14 @@ namespace Web.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View(new RegisterViewModel());
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             try
@@ -143,6 +158,34 @@ namespace Web.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult Role()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Role(CreateRole model)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            IdentityRole role = new IdentityRole() { Name = model.Name };
+
+            IdentityResult result = await _roleManager.CreateAsync(role);
+
+            if(result.Succeeded)
+            {
+                return RedirectToAction("Index", "Tracking", new { IsSaved = true, message = "Role created successfully" });
+            }
+            else
+            {
+                return RedirectToAction("Index", "Tracking", new { IsSaved = false, message = "Failed to create role" });
+            }
         }
     }
 
