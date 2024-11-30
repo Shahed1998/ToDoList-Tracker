@@ -187,6 +187,12 @@ namespace Web.Controllers
                 return RedirectToAction("Index", "Tracking", new { IsSaved = false, message = "Failed to create role" });
             }
         }
+
+        public IActionResult ListRoles()
+        {
+            var roles = _roleManager.Roles;
+            return View(roles);
+        }
     }
 
 

@@ -1,6 +1,7 @@
 ﻿@model Web.Models.Business_Entities.CompositeTrackerViewModel
 
 @{
+    ViewBag.Title = "All Trackers";
     bool? isSaved = ViewBag.IsSaved;
     var TrackingList = Model.Pager;
     int count = ViewBag.Count;

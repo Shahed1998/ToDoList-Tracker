@@ -15,6 +15,8 @@ namespace web.Data
             _configuration = configuration;
         }
 
+        public DbSet<MenuConfig> MenuConfigs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

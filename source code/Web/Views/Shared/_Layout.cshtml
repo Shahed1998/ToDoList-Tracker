@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>To Do List Tracker</title>
+    <title>@ViewBag.Title - To Do List Tracker</title>
     <link href="~/images/checklist.ico" rel="icon" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="~/bootstrap-datepicker-1.10.0/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
@@ -44,6 +44,7 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @await Component.InvokeAsync("Menu") @* this will be used for sidebar *@
             @RenderBody()
         </main>
     </div>

@@ -1,0 +1,33 @@
+﻿@using Web.Models.General_Entities
+@model List<MenuConfig>
+
+@if (Model.Any())
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>IsActive</th>
+                <th>Icon</th>
+                <th>Url</th>
+                <th>User role id</th>
+                <th>ParenId</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.IsActive</td>
+                    <td>@item.Icon</td>
+                    <td>@item.Url</td>
+                    <td>@item.UserRoleId</td>
+                    <td>@item.ParentId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
