@@ -33,10 +33,4 @@
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Entity\Entity.csproj" />
-    <ProjectReference Include="..\Repository\Repository.csproj" />
-    <ProjectReference Include="..\Services\Services.csproj" />
-  </ItemGroup>
-
 </Project>
