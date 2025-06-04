@@ -1,13 +1,14 @@
 ﻿@model Web.Models.Business_Entities.CompositeTrackerViewModel
 
 @{
-    ViewBag.Title = "All Trackers";
-    bool? isSaved = ViewBag.IsSaved;
+    ViewBag.Title = Model.Title;
+    bool isSaved = Model.IndexVM.IsSaved;
+    bool notify = Model.IndexVM.Notify;
     var TrackingList = Model.Pager;
-    int count = ViewBag.Count;
-    decimal achievements = ViewBag.Achievements;
-    int pageNumber = ViewBag.PageNumber;
-    int pageSize = ViewBag.PageSize;
+    int count = Model.IndexVM.count;
+    decimal achievements = Model.Achievements;
+    int pageNumber = Model.IndexVM.pageNumber;
+    int pageSize = Model.IndexVM.pageSize;
     string message;
 
     if (ViewBag.Message == "")
@@ -129,7 +130,7 @@
                asp-route-prevPage="true"
                class="btn btn-outline-secondary @prevDisabled">Previous</a>
 
-            if (ViewBag.PageNumber != 1)
+            if (Model.IndexVM.pageNumber != 1)
             {
                 <a asp-action="Index"
                    asp-route-pageNumber="1"
@@ -167,13 +168,14 @@
             var toast = new bootstrap.Toast(toastr)
 
             var isSaved = "@isSaved".toLowerCase();
+            var notify = '@notify'.toLowerCase();
 
-            if (isSaved == "true") {
+            if (isSaved == "true" && notify == "true") {
                 $("#toast").removeClass("bg-danger").addClass("bg-success");
                 $('.toast-body').text("@message");
                 toast.show();
             }
-            else if (isSaved == "false") {
+            else if (isSaved == "false" && notify == "true") {
                 $("#toast").removeClass("bg-success").addClass("bg-danger");
                 $('.toast-body').text("@message");
                 toast.show();

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Text.Json;
+using ToDoListTracker.Models.Business_Entities;
 using Web.Models.Business_Entities;
 using Web.Models.General_Entities;
 using Web.Services.Interfaces;
@@ -18,19 +20,27 @@ namespace Web.Controllers
             _signInManager = signInManager;
         }
 
-        public async Task<IActionResult> Index(bool? IsSaved, int pageNumber = 1, int pageSize = 5,
-            int count = 0, bool prevPage = false, string message = "")
+        public async Task<IActionResult> Index(IndexVM vm)
         {
 
-            if (prevPage)
+            if (TempData["IndexParams"] is string json)
             {
-                count = count - pageSize - 1;
+                vm = JsonSerializer.Deserialize<IndexVM>(json) ?? new IndexVM();
+            }
+            else if(vm is null)
+            {
+                vm = new IndexVM();
             }
 
-            if (pageNumber <= 1)
+            if (vm.prevPage)
             {
-                pageNumber = 1;
-                count = 0;
+                vm.count = vm.count - vm.pageSize - 1;
+            }
+
+            if (vm.pageNumber <= 1)
+            {
+                vm.pageNumber = 1;
+                vm.count = 0;
             }
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -41,20 +51,17 @@ namespace Web.Controllers
                 return RedirectToAction("Login", "User");
             }
 
-            var trackingList = await _trackerService.GetAllTrackers(pageNumber, pageSize, userId);
+            var trackingList = await _trackerService.GetAllTrackers(vm.pageNumber, vm.pageSize, userId);
 
             CompositeTrackerViewModel model = new CompositeTrackerViewModel();
 
             model.Pager = trackingList.Item1;
+            model.IndexVM = vm;
+            model.Achievements = trackingList.Item2 ?? decimal.Zero;
+            model.Title = "All Trackers";
 
             var end = model.Pager.Count();
-
-            ViewBag.IsSaved = IsSaved;
-            ViewBag.Achievements = trackingList.Item2;
-            ViewBag.Count = count;
-            ViewBag.PageNumber = pageNumber;
-            ViewBag.PageSize = pageSize;
-            ViewBag.Message = message;
+            ViewBag.Message =  vm.message;
 
             return View(model);
         }
@@ -71,7 +78,9 @@ namespace Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Index", new { IsSaved = false, message = "Failed to create" });
+                TempData["IndexParams"] = JsonSerializer.Serialize(new IndexVM() { IsSaved = false, Notify = true, message= "Failed to create" });
+
+                return RedirectToAction("Index");
             }
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -91,15 +100,20 @@ namespace Web.Controllers
 
             bool ts = await _trackerService.AddTracker(model);
 
-            return RedirectToAction("Index", new { IsSaved = ts });
+            TempData["IndexParams"] = JsonSerializer.Serialize(new IndexVM() { IsSaved = ts, Notify = true, message = "Success" });
+
+            return RedirectToAction("Index");
         }
 
         [Route("Tracking/Delete/{Id}")]
         public async Task<IActionResult> Delete(int Id)
         {
             bool isSaved = await _trackerService.Delete(Id);
+            var message = isSaved == true ? "Success" : "Failed";
 
-            return RedirectToAction("Index", new { IsSaved = isSaved });
+            TempData["IndexParams"] = JsonSerializer.Serialize(new IndexVM() { IsSaved = isSaved, Notify = true, message = message });
+
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -114,7 +128,8 @@ namespace Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Index", new { IsSaved = false, message="Failed to edit" });
+                TempData["IndexParams"] = JsonSerializer.Serialize(new IndexVM() { IsSaved = false, Notify = true, message = "Failed to edit" });
+                return RedirectToAction("Index");
             }
 
             var isUpdated = await _trackerService.Update(model);
@@ -125,7 +140,9 @@ namespace Web.Controllers
                 return PartialView("Edit", model);
             }
 
-            return RedirectToAction("Index", new { IsSaved = true });
+            TempData["IndexParams"] = JsonSerializer.Serialize(new IndexVM() { IsSaved = true, Notify = true, message = "Success" });
+
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> DeleteAll()
@@ -139,8 +156,11 @@ namespace Web.Controllers
             }
 
             var isSuccessfullyDeleted = await _trackerService.DeleteAll(userId);
+            var message = isSuccessfullyDeleted ? "Success" : "Failed";
 
-            return RedirectToAction("Index", new { IsSaved = isSuccessfullyDeleted });
+            TempData["IndexParams"] = JsonSerializer.Serialize(new IndexVM() { IsSaved = isSuccessfullyDeleted, Notify = true, message= message });
+
+            return RedirectToAction("Index");
         }
 
 
