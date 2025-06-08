@@ -1,15 +1,19 @@
-﻿@model Web.Models.Business_Entities.CompositeTrackerViewModel
+﻿@model CompositeTrackerViewModel
 
 @{
-    ViewBag.Title = Model.Title;
+
+    
     bool isSaved = Model.IndexVM.IsSaved;
     bool notify = Model.IndexVM.Notify;
     var TrackingList = Model.Pager;
-    int count = Model.IndexVM.count;
     decimal achievements = Model.Achievements;
     int pageNumber = Model.IndexVM.pageNumber;
     int pageSize = Model.IndexVM.pageSize;
+    var count = (pageNumber - 1) * pageSize + 1;
     string message;
+
+    ViewBag.Title = Model.Title;
+    ViewData["count"] = count; 
 
     if (ViewBag.Message == "")
     {
@@ -74,38 +78,9 @@
             </div>
         </div>
     </div>
-    <div class="panel-body">
-        @if (TrackingList?.Count() > 0)
-        {
-            <table class="table">
-                <thead>
-                    <tr class="table-dark">
-                        <th scope="col">SL No.</th>
-                        <th scope="col">Completed (hours)</th>
-                        <th scope="col">Planned (hours)</th>
-                        <th scope="col">Percentage (%)</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        foreach (var tracker in TrackingList)
-                        {
-                            count += 1;
-                            ViewData["count"] = count;
-                            <partial name="Partials/_TrackingList.cshtml" model="tracker" view-data="ViewData" />
-                        }
-                    }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <div>No data available</div>
+    <div class="panel-body TrackingList">
 
-            <hr />
-        }
+        <partial name="Partials/_TrackingList.cshtml" model="Model.Pager" view-data="ViewData" />
 
     </div>
     <div class="panel-footer">
