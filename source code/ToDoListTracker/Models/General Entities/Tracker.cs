@@ -26,5 +26,7 @@ namespace Web.Models.General_Entities
 
         [Required]
         public string? UserId { get; set; }
+
+        public bool? IsFlagged { get; set; }
     }
 }

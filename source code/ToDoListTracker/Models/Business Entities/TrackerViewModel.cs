@@ -25,6 +25,12 @@ namespace Web.Models.Business_Entities
 
         public string? UserId { get; set; }
 
+        private bool? _isFlagged;
+
+        public bool? IsFlagged { get { return _isFlagged; } set { _isFlagged = value; } }
+
+        public bool IsFlaggedTmp { get { return _isFlagged ?? false; } set { IsFlagged = value;  } } 
+
         #region Mapping
         public static explicit operator TrackerViewModel(Tracker t) => new TrackerViewModel()
         {
@@ -33,8 +39,9 @@ namespace Web.Models.Business_Entities
             Planned = t.Planned,
             Percentage = t.Percentage,
             Date = t.Date,
-            UserId = t.UserId
-        };
+            UserId = t.UserId,
+            IsFlagged = t.IsFlagged 
+    };
 
         public static explicit operator Tracker(TrackerViewModel t) => new Tracker()
         {
@@ -42,7 +49,8 @@ namespace Web.Models.Business_Entities
             Planned = t.Planned,
             Date = t.Date,
             Id = t.Id,
-            UserId = t.UserId
+            UserId = t.UserId,
+            IsFlagged = t.IsFlagged
         };
         #endregion
     }

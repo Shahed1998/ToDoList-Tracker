@@ -21,7 +21,7 @@ namespace Web.Repositories.Implementations
 
         public async Task<bool> Add(Tracker model)
         {
-            return await _trackerContext.Database.ExecuteSqlAsync($"usp_InsertIntoTrackerTable @completed = {model.Completed}, @planned = {model.Planned}, @userId = {model.UserId}") > 0;
+            return await _trackerContext.Database.ExecuteSqlAsync($"usp_InsertIntoTrackerTable @completed = {model.Completed}, @planned = {model.Planned}, @userId = {model.UserId}, @isFlagged = {model.IsFlagged}") > 0;
         }
 
         public async Task<(Pager<Tracker>, decimal?)> GetAll(int pageNumber = 1, int pageSize = 10, string? userId = null)
@@ -87,12 +87,13 @@ namespace Web.Repositories.Implementations
                 {
                     model.Percentage = (model.Completed / model.Planned) * 100;
 
-                    var sql = "UPDATE Tracker SET Completed=@Completed, Planned=@Planned, Percentage=@Percentage, Date=@Date WHERE Id=@Id";
+                    var sql = "UPDATE Tracker SET Completed=@Completed, Planned=@Planned, Percentage=@Percentage, Date=@Date, IsFlagged=@IsFlagged WHERE Id=@Id";
 
                     var parameters = new List<SqlParameter>();
 
                     parameters.Add(new SqlParameter("@Completed", model.Completed));
                     parameters.Add(new SqlParameter("@Planned", model.Planned));
+                    parameters.Add(new SqlParameter("@IsFlagged", model.IsFlagged));
                     parameters.Add(new SqlParameter("@Percentage", (model.Completed / model.Planned) * 100));
                     parameters.Add(new SqlParameter("@Date", model.Date));
                     parameters.Add(new SqlParameter("@Id", model.Id));

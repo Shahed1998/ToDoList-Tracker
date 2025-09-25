@@ -93,8 +93,9 @@ namespace Web.Controllers
 
             var model = new TrackerViewModel();
 
-            model.Completed = createModel.Completed;
+            model.Completed = createModel.IsFlagged ? 0 : createModel.Completed;
             model.Planned = createModel.Planned;
+            model.IsFlagged = createModel.IsFlagged;
 
             model.UserId = userId;
 
@@ -131,6 +132,8 @@ namespace Web.Controllers
                 TempData["IndexParams"] = JsonSerializer.Serialize(new IndexVM() { IsSaved = false, Notify = true, message = "Failed to edit" });
                 return RedirectToAction("Index");
             }
+
+            if (model.IsFlagged == true) model.Completed = 0;
 
             var isUpdated = await _trackerService.Update(model);
 

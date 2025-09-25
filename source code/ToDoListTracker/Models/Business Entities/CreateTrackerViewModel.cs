@@ -12,5 +12,8 @@ namespace Web.Models.Business_Entities
         [Required]
         [DecimalPrecision(6, 3, ErrorMessage = "Eg. 123.456")]
         public decimal? Planned { get; set; }
+
+        public bool IsFlagged { get; set; }
+
     }
 }

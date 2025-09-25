@@ -12,13 +12,13 @@
             <span asp-validation-for="Completed" class="text-danger"></span>
         </div>
 
-        <div class="form-group">
+        <div class="form-group mt-3">
             <label asp-for="Planned" class="required"></label>
             <input asp-for="Planned" class="form-control" />
             <span asp-validation-for="Planned" class="text-danger .planned-validation-error"></span>
         </div>
 
-        <div class="form-group">
+        <div class="form-group mt-3">
             <label asp-for="Date" class="required"></label>
             <div class="input-group mb-3">
                 <input asp-for="Date" class="form-control" id="dateInput" type="text" readonly="true" value=""/>
@@ -28,6 +28,11 @@
             </div>
 
             <span asp-validation-for="Date" class="text-danger .planned-validation-error"></span>
+        </div>
+
+        <div class="form-check mt-3">
+            <input asp-for="IsFlaggedTmp" class="form-check-input" type="checkbox">
+            <label asp-for="IsFlaggedTmp">Flagged</label>
         </div>
 
     </div>
